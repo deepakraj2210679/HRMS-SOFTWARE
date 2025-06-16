@@ -1,28 +1,5 @@
-import { Link } from 'react-router-dom'
-import { useState, useEffect } from "react"
-import axios from "axios"
-import toast from "react-hot-toast"
 
-const Onboarding = () => {
-  const [user, setUser] = useState([])
-  const [openPopup1, setOpenPopup1] = useState(false)
-  const [selectedUser, setSelectedUser] = useState(null)
-  const [ID, setID] = useState(0)
-
-  const getDetails = async () => {
-    try {
-      const res = await axios.get("http://localhost:3000/v1/getUsers")
-      setUser(res.data)
-    } catch (error) {
-      toast.error("Failed to fetch users")
-    }
-  }
-
-  useEffect(() => {
-    getDetails()
-  }, [])
-
-  const Popup1 = ({ user }) => {
+const Popup1 = ({ user }) => {
     const [errorMessage, setErrorMessage] = useState('')
     const [flag, setFlag] = useState(false)
     
@@ -56,7 +33,9 @@ const Onboarding = () => {
 
     const [formData, setFormData] = useState(template)
 
-    
+    useEffect(() => {
+      setFormData(template)
+    }, [user])
 
     const EmployeeId_Validation = async () => {
       if (!formData.EMPLOYEE_ID || formData.EMPLOYEE_ID.length === 0) {
@@ -279,89 +258,3 @@ const Onboarding = () => {
       </div>
     )
   }
-
-  return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <div className="bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60">
-        <div className="flex flex-col pt-40">
-          <Link to="/">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pl-10 transition-all duration-200">
-              ☞ Dashboard
-            </button>
-          </Link>
-          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9 transition-all duration-200">
-            ☞ Interview List
-          </button>
-          <Link to="/onboarding">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
-              ☞ Onboarding List
-            </button>
-          </Link>
-          <Link to="/employees">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10">
-              ☞ Employee List
-            </button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 p-5 overflow-hidden bg-gray-50">
-        <h1 className="text-3xl font-bold text-blue-800 mb-6">Employee Details</h1>
-        <div className="w-full">
-          <div className="max-h-[500px] overflow-y-scroll">
-            <table className="w-full border-separate border-spacing-y-3">
-              <thead className="sticky top-0 z-10 bg-yellow-400 text-white">
-                <tr className="bg-yellow-400 text-white">
-                  <th className="px-6 py-4 text-left font-semibold rounded-l-xl">Name</th>
-                  <th className="px-6 py-4 text-left font-semibold">DOI</th>
-                  <th className="px-6 py-4 text-left font-semibold">DOJ</th>
-                  <th className="px-6 py-4 text-left font-semibold">Designation</th>
-                  <th className="px-6 py-4 text-left font-semibold">Department</th>
-                  <th className="px-6 py-4 text-left font-semibold">Phone no</th>
-                  <th className="px-6 py-4 text-left font-semibold rounded-tr-lg">Option</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(user) && user.length > 0 ? (
-                  user.map((x, index) => (
-                    <tr key={index} className="bg-white shadow-md rounded-xl hover:bg-blue-50 transition-all">
-                      <td className="px-6 py-4 rounded-l-xl font-medium">{x.NAME || '-'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{x.DOI?.split("T")[0] || '-'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{x.DOJ?.split("T")[0] || '-'}</td>
-                      <td className="px-6 py-4">{x.DESIGNATION || '-'}</td>
-                      <td className="px-6 py-4">{x.DEPARTMENT || '-'}</td>
-                      <td className="px-6 py-4">{x.PHONE_NUMBER || '-'}</td>
-                      <td className="px-6 py-4 rounded-r-xl">
-                        <button 
-                          onClick={() => {
-                            setOpenPopup1(true)
-                            setSelectedUser(x)
-                            setID(x.ID)
-                          }} 
-                          className="text-blue-600 hover:text-blue-800 font-medium"
-                        >
-                          View
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="7" className="text-center py-8 text-gray-500 bg-white rounded-xl shadow">
-                      No users found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        {openPopup1 && <Popup1 user={selectedUser} />}
-      </div>
-    </div>
-  )
-}
-
-export {Onboarding}

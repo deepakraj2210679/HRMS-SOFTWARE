@@ -2,15 +2,15 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from "react"
 import axios from "axios"
+import toast from "react-hot-toast"
 
 const Employees = () => {
   const [user, setuser] = useState([])
-  const [openPopup,setOpenPopup]=useState(false)
   const [openPopup1,setOpenPopup1]=useState(false)
-  
+  const [selectedUser, setSelectedUser] = useState(null)
   
   const getDetials = async () => {
-    const res = await axios.get("http://localhost:3000/v1/getUsers")
+    const res = await axios.get("http://localhost:3000/v1/getEmployee")
     setuser(res.data)
   }
 
@@ -20,23 +20,23 @@ const Employees = () => {
 
 
 const StatusIndicator1 = ({ status }) => {
-  const isCompleted = status === true;
-  const name = isCompleted ? "Completed": "Pending";
-  const icon = isCompleted ? "✅" : "⏳";
-  const color= isCompleted ? "text-green-600" :"text-yellow-600"
+  const isCompleted = status == true;
+  const name = isCompleted ? "Active": "Inactive";
+  const icon = isCompleted ? "🟢" : "🔴";
+  const color= isCompleted ? "text-green-600" :"text-red-600"
 
   return (
-    <div class={color}>
+    <div class={`flex felx-col-2 gap-1 ${color}`}>
       <span>{icon} {name}</span>
     </div>
   )
 }
 
 const StatusIndicator2 = ({ status }) => {
-  const isCompleted = status === true;
-  const name = isCompleted ?"Pending" : "Completed";
-  const icon = isCompleted ? "⏳": "✅";
-  const color= isCompleted ? "text-yellow-600":"text-green-600" 
+  const isCompleted = status == true;
+  const name = isCompleted ? "Completed": "Pending";
+  const icon = isCompleted ? "✅" : "⏳";
+  const color= isCompleted ? "text-green-600" :"text-yellow-600"
 
   return (
     <div class={`flex felx-col-2 gap-1 ${color}`}>
@@ -46,7 +46,7 @@ const StatusIndicator2 = ({ status }) => {
   );
 }
 const StatusIndicator3 = ({ status }) => {
-  const isCompleted = status === true;
+  const isCompleted = status == true;
   const name = isCompleted ? "Completed": "Pending";
   const icon = isCompleted ? "✅" : "⏳";
   const color= isCompleted ? "text-green-600" :"text-yellow-600"
@@ -61,200 +61,282 @@ const StatusIndicator3 = ({ status }) => {
 
 
 
-//Employee id validation
-    let [ID,setID]=useState("");
-    let [errormessage,seterrormessage]=useState('');
-    let [flag,setflag]=useState("");
-    
-    const EmployeeId_Validation=(Eid)=>{
 
-        if(Eid.length==0)
-        {
-            seterrormessage("");
-        }
-        else if((Eid=="123"))
-        {
-            seterrormessage("✅ Valid ID Number");
-            setflag(true);
-        }
+const Popup1 = ({user}) => {
 
-        else
-        {
-            seterrormessage("❌ Invalid  ID Number");
-            setflag(false);
-        }
-    }
+  
+  const tempalete={
+    EMPLOYEE_ID: user.EMPLOYEE_ID || "",
+    PERFORMANCE_KEY: user.PERFORMANCE_KEY || "",
+    DATE_OF_BIRTH: user.DATE_OF_BIRTH?.split("T")[0] || "",
+    NAME: user.NAME || "",
+    DESIGNATION: user.DESIGNATION || "",
+    DATE_OF_JOINING: user.DATE_OF_JOINING ?.split("T")[0] || "",
+    MAIL_ID: user.MAIL_ID || "",
+    PHONE: user.PHONE|| "",
+    ADDRESS: user.ADDRESS || "",
+    CTC: user.CTC || "",
+    DEPARTMENT: user.DEPARTMENT || "",
+    DATE_OF_INTERVIEW: user.DATE_OF_INTERVIEW ?.split("T")[0] || "",
+    GENDER: user.GENDER || "",
+    EMPLOYEE_ACTIVE_STATUS: user.EMPLOYEE_ACTIVE_STATUS || "",
+    DOCUMENTS_STATUS: user.DOCUMENTS_STATUS || "",
+    ASSET_STATUS: user.ASSET_STATUS || "",
+    BLOOD_GROUP: user.BLOOD_GROUP || "",
+    MARRIED_STATUS: user.MARRIED_STATUS || "",
+    FATHER_NAME: user.FATHER_NAME || "",
+    FATHER_PHONE_NUMBER: user.FATHER_PHONE_NUMBER || "",
+    MOTHER_NAME: user.MOTHER_NAME || "",
+    MOTHER_PHONE_NUMBER: user.MOTHER_PHONE_NUMBER || "",
+    EMERGENCY_CONTACT_NUMBER: user.EMERGENCY_CONTACT_NUMBER || "",
+    GUARDIAN:user.GUARDIAN||"",
+    GUARDIAN_PHONE_NUMBER:user.GUARDIAN_PHONE_NUMBER ||""
+  };
 
-const Popup = () => {
-  return (
-    <div className="fixed inset-0 bg-black/10 backdrop-blur-xs flex justify-center items-center">
-      <div className="bg-gray-50 pl-8 pr-8 pb-8 pt-5 rounded-lg shadow-lg w-96">
-        <button
-            onClick={()=>setOpenPopup(false)}
-            className="pl-75  text-blue-800"
-          >
-            ❎
-          </button>
-        <h2 className="text-xl font-bold mb-4 text-blue-700">Create Employee ID</h2>
-        <input
-          type='text'
-          onChange={(e)=>{EmployeeId_Validation(e.target.value),setID(e.target.value)}}
-          placeholder="Enter Employee ID"
-          className="w-full border border-gray-300 rounded-sm px-3 py-2 mb-4 "
-        />
-        <div className={`${flag ? "text-[#44ed23]" : "text-red-500"} text-[14px]`}>{errormessage}</div>
-
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={()=>setOpenPopup(false)}
-            className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
-          >
-            Cancel
-          </button>
-          <button
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Save
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+const [formData,setFormData]=useState(tempalete)
 
 
+ 
+  const handleChange=(a)=>{
 
-const Popup1 = () => {
+          const {name,value}=a.target;
+          setFormData({...formData,[name]:value})
+      
+      }
+ 
+  const submitHandaler=async()=>{
+        await axios.post("http://localhost:3000/v1/updateEmployee",formData)
+        .then((res)=>{
+  
+            toast.success(res.data.message,{position:'top-right',duration: 5000})
+            getDetials();
+            setOpenPopup1(false);
+        })
+        .catch((error)=>{
+  
+            toast.error("some thing went wrong",{position:'top-right',duration: 5000})
+        })
+  }
+
   return (
     <div className="fixed inset-0 bg-black/10 backdrop-blur-xs flex justify-center items-center z-50">
       <div className="bg-white rounded-lg shadow-xl w-[700px] p-9 overflow-auto max-h-[90vh]">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-blue-800">Onboarding Details</h2>
-          <button onClick={()=>setOpenPopup1(false)} className="text-blue-700 hover:bg-green-50">❎</button>
+          <button onClick={()=>setOpenPopup1(false)}  className="text-blue-700 hover:bg-green-50">❎</button>
         </div>
         
+        <form onSubmit={(e) => {
+        e.preventDefault(); // Prevent full-page reload
+        submitHandaler();  // Your original function
+        
+      }}>
         {/* section-1: Employee ID*/}
-        <div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">1. Employee ID</h3>
-          <input
-            type="text"
-            onChange={(e) => handleIdChange(e.target.value)}
-            placeholder="Enter Employee ID"
-            className="w-full border rounded-sm px-3 py-2 mb-4"
-        />
-
-        <div className={`${flag ? "text-[#44ed23]" : "text-red-500"} text-[14px]`}>{errormessage}</div>
-            
+         <h3 className="text-lg font-semibold text-yellow-400 mb-3 pt-4">1.Employee ID</h3>
+        <div className="mb-4">
+          <label className="block mb-1 text-sm font-medium text-gray-700">
+            Employee ID<span className="text-red-500"> *</span>
+          
+          <div className="flex gap-2 items-center">
+            <input
+              value={formData.EMPLOYEE_ID}
+              onChange={handleChange}
+              className="flex-1 border rounded-sm px-3 py-2 mt-4"
+            />
+          </div>
+          </label>
         </div>
+      
         {/* Section 2: User Details */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">2. User Details</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm mb-4">
-            <input className="border p-2 rounded" placeholder="Performance Key" />
-            <input className="border p-2 rounded" placeholder="Employee ID" />
-            <input className="border p-2 rounded" placeholder="Name" />
-            <input className="border p-2 rounded" placeholder="Designation" />
-            <input className="border p-2 rounded" placeholder="Date of Joining" type="date" />
-            <input className="border p-2 rounded" placeholder="Mail ID" />
-            <input className="border p-2 rounded" placeholder="Phone" />
-            <input className="border p-2 rounded" placeholder="Address" />
-            <input className="border p-2 rounded" placeholder="CTC" />
-            <input className="border p-2 rounded" placeholder="Department" />
-            <input className="border p-2 rounded" placeholder="Date of Birth" type="date" />
-            <input className="border p-2 rounded" placeholder="Gender" />
+          <h3 className="text-lg font-semibold text-yellow-400 mb-3 pt-8">2.Other Details</h3>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <label>
+              Performance Key<span className='text-red-500 '> *</span>
+              <input value={formData.PERFORMANCE_KEY} onChange={handleChange} required className="border mt-2 p-2 rounded w-full font-medium" />
+            </label>
+            <label>
+              Date of Interview<span className='text-red-500 '> *</span>
+              <input name="DATE_OF_INTERVIEW" value={formData.DATE_OF_INTERVIEW} onChange={handleChange} required className="border mt-2 p-2 rounded w-full font-medium" type="date" />
+            </label>
+            <label>
+              Name<span className='text-red-500 '> *</span>
+              <input name="NAME" value={formData.NAME} onChange={handleChange} required className="border p-2 mt-2 rounded font-medium w-full" />
+            </label>
+            <label>
+              Designation<span className='text-red-500 '> *</span>
+              <input name="DESIGNATION" value={formData.DESIGNATION} required onChange={handleChange} className="border font-medium mt-2 p-2 rounded w-full" />
+            </label>
+            <label>
+              Date of Joining<span className='text-red-500 '> *</span>
+              <input name="DATE_OF_JOINING" value={formData.DATE_OF_JOINING} required onChange={handleChange} className="border font-medium mt-2 p-2 rounded w-full" type="date" />
+            </label>
+            <label>
+              Mail ID<span className='text-red-500 '> *</span>
+              <input name="MAIL_ID" value={formData.MAIL_ID} onChange={handleChange} type='email' required  className="border font-medium p-2 mt-2 rounded w-full" />
+            </label>
+            <label>
+              Phone Number<span className='text-red-500 '> *</span>
+              <input name="PHONE" value={formData.PHONE} onChange={handleChange} required className="border p-2 mt-2 font-medium rounded w-full" />
+            </label>
+            <label>
+              Address
+              <input name="ADDRESS" value={formData.ADDRESS} onChange={handleChange} className="border p-2 mt-2 font-medium rounded w-full" />
+            </label>
+            <label>
+              CTC
+              <input name="CTC" value={formData.CTC} onChange={handleChange} type="number" className="border mt-2 p-2 font-medium rounded w-full" />
+            </label>
+            <label>
+              Department<span className='text-red-500 '> *</span>
+              <input name="DEPARTMENT" value={formData.DEPARTMENT} required onChange={handleChange} className="border mt-2 font-medium p-2 rounded w-full" />
+            </label>
+            <label>
+              Date of Birth<span className='text-red-500 '> *</span>
+              <input name="DATE_OF_BIRTH" value={formData.DATE_OF_BIRTH} required onChange={handleChange} className="border mt-2 p-2 font-medium rounded w-full" type="date" />
+            </label>
+            <label>Gender<span className='text-red-500 '> *</span>
+            <select
+                  name="GENDER"
+                  value={formData.GENDER}
+                  onChange={handleChange}
+                  required
+                  className="border p-2 mt-2 rounded font-medium w-full"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </label>
+            <label>
+              Married Status
+              <input name="MARRIED_STATUS" value={formData.MARRIED_STATUS} onChange={handleChange} className="border mt-2 p-2 rounded w-full font-medium" />
+            </label>
+            <label>
+              Blood Group
+              <input name="BLOOD_GROUP" value={formData.BLOOD_GROUP} onChange={handleChange} className="border mt-2 p-2 rounded w-full font-medium" />
+            </label>
+            <label>
+              Emergency Contact Number<span className='text-red-500 '> *</span>
+              <input name="EMERGENCY_CONTACT_NUMBER" value={formData.EMERGENCY_CONTACT_NUMBER} required onChange={handleChange} className="border mt-2 p-2 font-medium rounded w-full" />
+            </label>
           </div>
         </div>
 
         {/* Section 3: Parent Details */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">3. Parent Details</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm mb-4">
-            <input className="border p-2 rounded" placeholder="Parent Name(s)" />
-            <input className="border p-2 rounded" placeholder="Emergency Contact No (Father/Mother)" />
-            <input className="border p-2 rounded" placeholder="Married Status" />
-            <input className="border p-2 rounded" placeholder="Blood Group" />
+          <h3 className="text-lg font-medium text-yellow-400 mt-9 mb-5 ">3. Parent Details</h3>
+          <div className="grid grid-cols-2 gap-4 text-sm mb-4 font-medium">
+            <label>
+              Father's Name
+              <input name="FATHER_NAME" value={formData.FATHER_NAME} onChange={handleChange} className="border p-2 mt-2 rounded w-full font-medium" />
+            </label>
+    
+            <label>
+              Father's Phone Number
+              <input name="FATHER_PHONE_NUMBER" value={formData.FATHER_PHONE_NUMBER} onChange={handleChange} className="border mt-2 p-2 rounded w-full font-medium" />
+            </label>
+            <label>
+              Mother's Name
+              <input name="MOTHER_NAME" value={formData.MOTHER_NAME} onChange={handleChange} className="border p-2 mt-2 rounded w-full font-medium" />
+            </label>
+            <label>
+              Mother's Phone Number
+              <input name="MOTHER_PHONE_NUMBER" value={formData.MOTHER_PHONE_NUMBER} onChange={handleChange} className="border mt-2 p-2 rounded w-full font-medium" />
+            </label>
+            <label>
+              guardian
+              <input name="GUARDIAN" value={formData.GUARDIAN} onChange={handleChange} className="border mt-2 p-2 rounded w-full font-medium" />
+            </label>
+            <label>
+              guardian Phone Number
+              <input name="GUARDIAN_PHONE_NUMBER" value={formData.GUARDIAN_PHONE_NUMBER} onChange={handleChange} className="border mt-2 p-2 rounded w-full font-medium" />
+            </label>
           </div>
         </div>
 
-        {/* Section 4: Document Update */}
-        <div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">4. Document Update</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm mb-4">
-            <input className="border p-2 rounded" placeholder="Aadhar Number" />
-            <input className="border p-2 rounded" placeholder="PAN Number" />
-            <input className="border p-2 rounded" placeholder="Bank Account Number" />
-            <input className="border p-2 rounded" placeholder="IFSC Code" />
-            <input className="border p-2 rounded" placeholder="Passport Number" />
-            <input className="border p-2 rounded" placeholder="Driving License Number" />
+
+  
+        <div className="flex mt-6 gap-3 pt-8 items-center">
+            <button
+              onClick={()=>{
+                const updatedStatus = !formData.EMPLOYEE_ACTIVE_STATUS;
+                 setFormData({...formData,EMPLOYEE_ACTIVE_STATUS: updatedStatus});
+              }}
+              
+              type="button"
+              className={`px-4 py-2 text-white rounded ${formData.EMPLOYEE_ACTIVE_STATUS ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'}`}
+            >
+              {formData.EMPLOYEE_ACTIVE_STATUS ? 'InActivate' : 'Activate'}
+            </button>
+
+            <button
+              onClick={() => setOpenPopup1(false)}
+              type="button"
+              className="px-4 py-2 ml-auto bg-gray-300 text-black rounded hover:bg-gray-400"
+            >
+              Cancel
+            </button>
+
+            <button
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              type="submit"
+            >
+              Update
+            </button>
           </div>
-        </div>
 
-        <div className="flex justify-end mt-6 gap-3 pt-8">
-          <button
-            className="mr-80 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Activate
-          </button>
-          <button
-            onClick={()=>setOpenPopup1(false)}
-            className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
-          >
-            Cancel
-          </button>
-          <button
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Update
-          </button>
-
-        </div>
+        </form>
       </div>
     </div>
   );
 };
 
 
-
-  return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <div className="bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60">
-        <div className="flex flex-col pt-40">
-          <Link to="/">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pl-10 transition-all duration-200">
-              <span>☞</span> Dashboard
-            </button>
-          </Link>
-          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9 transition-all duration-200">
-            <span>☞</span> Interview List
+return (
+  <div className="flex h-screen">
+    {/* Sidebar */}
+    <div className="bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60">
+      <div className="flex flex-col pt-40">
+        <Link to="/">
+          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pl-10 transition-all duration-200">
+            ☞ Dashboard
           </button>
-          <Link to="/onboarding">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
-              <span>☞</span> Onboarding List
-            </button>
-          </Link>
-           <Link to={'/employees'}>
-                <button class='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10'><scan class='text-'>☞</scan> Employee List</button>
-            </Link>
-        </div>
+        </Link>
+        <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9 transition-all duration-200">
+          ☞ Interview List
+        </button>
+        <Link to="/onboarding">
+          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
+            ☞ Onboarding List
+          </button>
+        </Link>
+        <Link to="/employees">
+          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10">
+            ☞ Employee List
+          </button>
+        </Link>
       </div>
+    </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-5 overflow-scroll bg-gray-50">
-        <h1 className="text-3xl font-bold text-blue-800 mb-6">Welcome to Onboarding Table</h1>
-        <div className="w-full">
+    {/* Main Content */}
+    <div className="flex-1 p-5 overflow-hidden bg-gray-50">
+      <h1 className="text-3xl font-bold text-blue-800 mb-6">Employee Detials</h1>
+      <div className="w-full"> 
+        <div className="max-h-[500px] overflow-y-scroll custom-scrollbar ">
           <table className="w-full border-separate border-spacing-y-3">
-            <thead>
-              <tr className="bg-yellow-400 text-white">
-                <th className="px-6 py-4 text-left font-semibold rounded-tl-lg">Performance Key</th>
+            <thead className="sticky top-0 z-10 bg-yellow-400 text-white">
+              <tr>
+                <th className="px-6 py-4 text-left font-semibold rounded-l-xl">Performance Key</th>
                 <th className="px-6 py-4 text-left font-semibold">Employee ID</th>
                 <th className="px-6 py-4 text-left font-semibold">Name</th>
                 <th className="px-6 py-4 text-left font-semibold">Role</th>
-                <th className="px-6 py-4 text-left font-semibold">DOI</th>
-                <th className="px-6 py-4 text-left font-semibold">Onboarding Status</th>
+                <th className="px-6 py-4 text-left  font-semibold">DOJ</th>
                 <th className="px-6 py-4 text-left font-semibold">Document Status</th>
                 <th className="px-6 py-4 text-left font-semibold">Asset Status</th>
-                <th className="px-6 py-4 text-left font-semibold rounded-tr-lg">Option</th>
+                <th className="px-6 py-4 text-left font-semibold">Employee Status</th>
+                <th className="px-6 py-4 text-left font-semibold rounded-r-xl">Details</th>
               </tr>
             </thead>
             <tbody>
@@ -262,29 +344,30 @@ const Popup1 = () => {
                 user.map((x, index) => (
                   <tr
                     key={index}
-                    className="bg-white shadow-md rounded-xl overflow-hidden my-4 hover:bg-blue-50 transition-all"
+                    className="bg-white shadow-md hover:bg-blue-50 transition-all"
                   >
-                    <td className="px-6 py-4 rounded-l-xl">{x.PERFORMANCE_KEY || 'Dashboard'}</td>
-                    <td className="px-6 py-4">{x.EMPLOYEE_ID ? (x.EMPLOYEE_ID) : (
-                      <button onClick={()=>setOpenPopup(true)} class='border border-gray-200 text-gray-800 p-1 px-3 rounded-xl bg-gray-200 hover:bg-yellow-300  hover:text-black'>Create</button>
-                    )}</td>
+                    <td className="px-6 py-4 rounded-l-xl">{x.PERFORMANCE_KEY}</td>
+                    <td className="px-6 py-4">{x.EMPLOYEE_ID}</td>
                     <td className="px-6 py-4 font-medium">{x.NAME}</td>
-                    <td className="px-6 py-4">{x.DESIGNATION}</td>
-                    <td className="px-6 py-4">{x.DATE_OF_JOINING ? x.DATE_OF_JOINING.split("T")[0] : ''}</td>
+                    <td className="px-6 py-4">{x.DESIGNATION }</td>
+                    <td className="px-6 py-4 single-line">{x.DATE_OF_JOINING?.split("T")[0]}</td>
                     <td className="px-6 py-4">
-                          <StatusIndicator1 status={x.ONBOARDING_STATUS} />
+                      <StatusIndicator2 status={x.DOCUMENTS_STATUS} />
                     </td>
                     <td className="px-6 py-4">
-                          <StatusIndicator2 status={x.DOCUMENTS_STATUS} />
+                      <StatusIndicator3 status={x.ASSET_STATUS } />
                     </td>
                     <td className="px-6 py-4">
-                          <StatusIndicator3 status={x.ASSET_STATUS} />
+                      <StatusIndicator1 status={x.EMPLOYEE_ACTIVE_STATUS } />
                     </td>
-
                     <td className="px-6 py-4 rounded-r-xl">
-                      <button onClick={()=>setOpenPopup1(true)} className="text-blue-600 hover:text-blue-800 font-medium">View</button>
+                      <button
+                        onClick={() => {setOpenPopup1(true);setSelectedUser(x);}}
+                        className="text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        View
+                      </button>
                     </td>
-      
                   </tr>
                 ))
               ) : (
@@ -295,15 +378,14 @@ const Popup1 = () => {
                 </tr>
               )}
             </tbody>
-             {openPopup && <Popup/>}
-             {openPopup1 && <Popup1/>}
           </table>
         </div>
+        {openPopup1 && <Popup1 user={selectedUser} />}
       </div>
     </div>
-    
+  </div>
+);
 
-  )
 }
 
 

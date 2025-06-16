@@ -22,71 +22,76 @@ const getInterviewList=(req,res)=>{
 const updateList = (req, res) => {
     const {
         EMPLOYEE_ID,
+        PERFORMANCE_KEY,
+        DATE_OF_BIRTH,
         NAME,
         DESIGNATION,
         DATE_OF_JOINING,
-        EMPLOYEE_ACTIVE_STATUS,
-        DOCUMENTS_STATUS,
-        ASSET_STATUS,
         MAIL_ID,
         PHONE,
         ADDRESS,
         CTC,
         DEPARTMENT,
-        DOB,
+        DATE_OF_INTERVIEW,
+        GENDER,
+        EMPLOYEE_ACTIVE_STATUS,
+        DOCUMENTS_STATUS,
+        ASSET_STATUS,
+        BLOOD_GROUP,
+        MARRIED_STATUS,
         FATHER_NAME,
         MOTHER_NAME,
         FATHER_PHONE_NUMBER,
         MOTHER_PHONE_NUMBER,
         EMERGENCY_CONTACT_NUMBER,
-        BLOOD_GROUP,
-        MARRIED_STATUS,
-        GENDER
+        GUARDIAN,
+        GUARDIAN_PHONE_NUMBER
     } = req.body;
 
     if (!EMPLOYEE_ID) {
-        return res.status(400).json({ message: "EMPLOYEE_ID is required for update." });
+        return res.json({ message: "EMPLOYEE_ID is required for update." });
     }
-    
+
     const query = `
-        UPDATE onboarding_list
+        UPDATE employees
         SET 
-            NAME = ?, DESIGNATION = ?, DATE_OF_JOINING = ?, EMPLOYEE_ACTIVE_STATUS = ?, 
-            DOCUMENTS_STATUS = ?, ASSET_STATUS = ?, MAIL_ID = ?, PHONE = ?, ADDRESS = ?, 
-            CTC = ?, DEPARTMENT = ?, DOB = ?, FATHER_NAME = ?, MOTHER_NAME = ?, 
-            FATHER_PHONE_NUMBER = ?, MOTHER_PHONE_NUMBER = ?, EMERGENCY_CONTACT_NUMBER = ?, 
-            BLOOD_GROUP = ?, MARRIED_STATUS = ?, GENDER = ?
+            PERFORMANCE_KEY = ?, DATE_OF_BIRTH = ?, NAME = ?, DESIGNATION = ?, DATE_OF_JOINING = ?,
+            MAIL_ID = ?, PHONE = ?, ADDRESS = ?, CTC = ?, DEPARTMENT = ?, DATE_OF_INTERVIEW = ?,
+            GENDER = ?, EMPLOYEE_ACTIVE_STATUS = ?, DOCUMENTS_STATUS = ?, ASSET_STATUS = ?,
+            BLOOD_GROUP = ?, MARRIED_STATUS = ?, FATHER_NAME = ?, MOTHER_NAME = ?,
+            FATHER_PHONE_NUMBER = ?, MOTHER_PHONE_NUMBER = ?, EMERGENCY_CONTACT_NUMBER = ?,
+            GUARDIAN = ?, GUARDIAN_PHONE_NUMBER = ?
         WHERE EMPLOYEE_ID = ?
     `;
 
     const values = [
-        NAME, DESIGNATION, DATE_OF_JOINING, EMPLOYEE_ACTIVE_STATUS,
-        DOCUMENTS_STATUS, ASSET_STATUS, MAIL_ID, PHONE, ADDRESS,
-        CTC, DEPARTMENT, DOB, FATHER_NAME, MOTHER_NAME,
+        PERFORMANCE_KEY, DATE_OF_BIRTH, NAME, DESIGNATION, DATE_OF_JOINING,
+        MAIL_ID, PHONE, ADDRESS, CTC, DEPARTMENT, DATE_OF_INTERVIEW,
+        GENDER, EMPLOYEE_ACTIVE_STATUS, DOCUMENTS_STATUS, ASSET_STATUS,
+        BLOOD_GROUP, MARRIED_STATUS, FATHER_NAME, MOTHER_NAME,
         FATHER_PHONE_NUMBER, MOTHER_PHONE_NUMBER, EMERGENCY_CONTACT_NUMBER,
-        BLOOD_GROUP, MARRIED_STATUS, GENDER, EMPLOYEE_ID
+        GUARDIAN, GUARDIAN_PHONE_NUMBER, EMPLOYEE_ID
     ];
 
     db.query(query, values, (error, result) => {
         if (error) {
-            return res.status(500).json({ message: "Failed to update the onboarding record", error: error.message });
+            return res.json({ message: "Failed to update the onboarding record", error: error.message });
         }
 
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "No record found with the given EMPLOYEE_ID" });
+            return res.json({ message: "No record found with the given EMPLOYEE_ID" });
         }
 
-        res.json({ message: "Onboarding record updated successfully" });
+        res.json({ message: "Employee record updated successfully" });
     });
 };
 
 
 const getuserById = (req, res) => {
     try {
-        console.log(req.params);
         const user_id = req.params.id;
 
-        db.query('SELECT * FROM onboarding_list WHERE EMPLOYEE_ID = ?', [user_id], (err, rows) => {
+        db.query('SELECT * FROM employees WHERE EMPLOYEE_ID = ?', [user_id], (err, rows) => {
             if (err) {
                 return res.send({ message: "Error in getting the user by id", error: err.message });
             }
@@ -107,64 +112,83 @@ const getuserById = (req, res) => {
 
 
 
+
 const AddEmployee = (req, res) => {
     const {
-        PERFORMANCE_KEY,
         EMPLOYEE_ID,
+        PERFORMANCE_KEY,
+        DATE_OF_BIRTH,
         NAME,
         DESIGNATION,
         DATE_OF_JOINING,
-        EMPLOYEE_ACTIVE_STATUS,
-        DOCUMENTS_STATUS,
-        ASSET_STATUS,
         MAIL_ID,
         PHONE,
         ADDRESS,
         CTC,
         DEPARTMENT,
-        DOB,
-        FATHER_NAME,
-        MOTHER_NAME,
-        FATHER_PHONE_NUMBER,
-        MOTHER_PHONE_NUMBER,
-        EMERGENCY_CONTACT_NUMBER,
+        DATE_OF_INTERVIEW, 
+        GENDER,
+        EMPLOYEE_ACTIVE_STATUS,
+        DOCUMENTS_STATUS,
+        ASSET_STATUS,
         BLOOD_GROUP,
         MARRIED_STATUS,
-        GENDER
+        FATHER_NAME,
+        FATHER_PHONE_NUMBER,
+        MOTHER_NAME,
+        MOTHER_PHONE_NUMBER,
+        EMERGENCY_CONTACT_NUMBER,
+        GUARDIAN,
+        GUARDIAN_PHONE_NUMBER
     } = req.body;
 
+    // Minimal required field check
+    if (!EMPLOYEE_ID) {
+        return res.status(400).json({ message: "Required fields are missing." });
+    }
+
+    // Convert empty or undefined values to NULL
+    const normalize = (val) =>{
+        return val === undefined || val === '' ? null : val
+    }
+
     const query = `
-        INSERT INTO employeedata1 (
-            PERFORMANCE_KEY,EMPLOYEE_ID, NAME, DESIGNATION, DATE_OF_JOINING, EMPLOYEE_ACTIVE_STATUS,
-            DOCUMENTS_STATUS, ASSET_STATUS, MAIL_ID, PHONE, ADDRESS, CTC, DEPARTMENT,
-            DOB, FATHER_NAME, MOTHER_NAME, FATHER_PHONE_NUMBER, MOTHER_PHONE_NUMBER,
-            EMERGENCY_CONTACT_NUMBER, BLOOD_GROUP, MARRIED_STATUS, GENDER
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO employees (
+            EMPLOYEE_ID, PERFORMANCE_KEY, DATE_OF_BIRTH, NAME, DESIGNATION,
+            DATE_OF_JOINING, MAIL_ID, PHONE, ADDRESS, CTC, DEPARTMENT,
+            DATE_OF_INTERVIEW, GENDER, EMPLOYEE_ACTIVE_STATUS, DOCUMENTS_STATUS,
+            ASSET_STATUS, BLOOD_GROUP, MARRIED_STATUS, FATHER_NAME,
+            FATHER_PHONE_NUMBER, MOTHER_NAME, MOTHER_PHONE_NUMBER, EMERGENCY_CONTACT_NUMBER,
+            GUARDIAN,GUARDIAN_PHONE_NUMBER
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
-        PERFORMANCE_KEY,
-        EMPLOYEE_ID,
-        NAME,
-        DESIGNATION,
-        DATE_OF_JOINING,
-        EMPLOYEE_ACTIVE_STATUS,
-        DOCUMENTS_STATUS,
-        ASSET_STATUS,
-        MAIL_ID,
-        PHONE,
-        ADDRESS,
-        CTC,
-        DEPARTMENT,
-        DOB,
-        FATHER_NAME,
-        MOTHER_NAME,
-        FATHER_PHONE_NUMBER,
-        MOTHER_PHONE_NUMBER,
-        EMERGENCY_CONTACT_NUMBER,
-        BLOOD_GROUP,
-        MARRIED_STATUS,
-        GENDER
+        normalize(EMPLOYEE_ID),
+        normalize(PERFORMANCE_KEY),
+        normalize(DATE_OF_BIRTH),
+        normalize(NAME),
+        normalize(DESIGNATION),
+        normalize(DATE_OF_JOINING),
+        normalize(MAIL_ID),
+        normalize(PHONE),
+        normalize(ADDRESS),
+        normalize(CTC),
+        normalize(DEPARTMENT),
+        normalize(DATE_OF_INTERVIEW),
+        normalize(GENDER),
+        normalize(EMPLOYEE_ACTIVE_STATUS),
+        normalize(DOCUMENTS_STATUS),
+        normalize(ASSET_STATUS),
+        normalize(BLOOD_GROUP),
+        normalize(MARRIED_STATUS),
+        normalize(FATHER_NAME),
+        normalize(FATHER_PHONE_NUMBER),
+        normalize(MOTHER_NAME),
+        normalize(MOTHER_PHONE_NUMBER),
+        normalize(EMERGENCY_CONTACT_NUMBER),
+        normalize(GUARDIAN),
+        normalize(GUARDIAN_PHONE_NUMBER)
     ];
 
     db.query(query, values, (error, result) => {
@@ -175,4 +199,43 @@ const AddEmployee = (req, res) => {
     });
 };
 
-export { updateList,getInterviewList,getuserById,AddEmployee };
+const DeleteInterview = (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({ message: "ID is required to delete the interview record." });
+    }
+
+    const query = 'DELETE FROM interview_list WHERE ID = ?';
+    db.query(query, [id], (error, result) => {
+        if (error) {
+            return res.status(500).json({ message: "Failed to delete the interview record", error: error.message });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "No record found with the given ID" });
+        }
+
+        res.json({ message: "Interview record deleted successfully" });
+    });
+};
+
+const GetEmployee=(req,res)=>{
+    const query = 'SELECT * FROM employees';
+    db.query(query,(error,results) => {
+        if (error) {
+            return res.json({ error: 'Database query failed' });
+        }
+        // Replace null or undefined values with empty strings
+        const cleanedResults=results.map(row=>{
+            const cleanedRow={};
+            for (const key in row) {
+                cleanedRow[key]=row[key] ?? "";
+            }
+            return cleanedRow;
+        });
+        res.json(cleanedResults);
+    });
+    
+}
+
+export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee };

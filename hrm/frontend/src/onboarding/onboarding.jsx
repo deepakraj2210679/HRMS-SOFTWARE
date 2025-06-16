@@ -2,80 +2,114 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from "react"
 import axios from "axios"
+import toast from "react-hot-toast"
 
 const Onboarding = () => {
   const [user, setuser] = useState([])
   const [openPopup1,setOpenPopup1]=useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
+  const [ID,setID]=useState(0);
 
-  
   const getDetials = async () => {
     const res = await axios.get("http://localhost:3000/v1/getUsers")
     setuser(res.data)
   }
 
-  useEffect(() => {
-    getDetials()
-  }, []) // Make sure to include the dependency array to avoid infinite re-renders
-
-
-
-
-
-
-//Employee id validation
-    let [ID,setID]=useState("");
-    let [errormessage,seterrormessage]=useState('');
-    let [flag,setflag]=useState("");
-    
-    const EmployeeId_Validation=(Eid)=>{
-
-        if(Eid.length==0)
-        {
-            seterrormessage("");
-        }
-        else if((Eid=="123"))
-        {
-            seterrormessage("✅ Valid ID Number");
-            setflag(true);
-        }
-
-        else
-        {
-            seterrormessage("❌ Invalid  ID Number");
-            setflag(false);
-        }
-    }
+ useEffect(() => {
+  getDetials(); 
+}, []);
 
 
 
 
 const Popup1 = ({user}) => {
 
+
+    let [errorMessage, setErrorMessage] = useState('');
+    let [flag, setFlag] = useState("");
+    
+    const EmployeeId_Validation = async() => {
+    if((formData.EMPLOYEE_ID).length==0)
+    {
+      setErrorMessage("❗ Employee ID cannot be empty");
+      setFlag(false);
+    }
+    else
+    {
+        const Eid=await axios.get(`http://localhost:3000/v1/getuser/${formData.EMPLOYEE_ID}`);
+        if (Eid.data.message != "found") 
+        {
+          setErrorMessage(`✅ ${formData.EMPLOYEE_ID} does not exist. You can proceed.`);
+          setFlag(true);
+        }
+
+        else {
+          setErrorMessage(`❌ ${formData.EMPLOYEE_ID} already exists`);
+          setFlag(false);
+          
+        }
+    }
+
+  
+  };
+  
   const tempalete={
-    performanceKey: user.PERFORMANCE_KEY || "",
-    employeeId: user.EMPLOYEE_ID || "",
-    name: user.NAME || "",
-    designation: user.DESIGNATION || "",
-    doj: user.DOJ.split("T")[0] || "",
-    doi: user.DOI.split("T")[0] || "",
-    mail: user.MAIL_ID || "",
-    phone: user.PHONE_NUMBER || "",
-    address: user.ADDRESS || "",
-    ctc: user.CTC || "",
-    department: user.DEPARTMENT || "",
-    dob: user.DOB?.split("T")[0] || "",
-    gender: user.GENDER || "",
+    EMPLOYEE_ID: user.EMPLOYEE_ID || "",
+    PERFORMANCE_KEY: user.PERFORMANCE_KEY || "",
+    DATE_OF_BIRTH: user.DATE_OF_BIRTH?.split("T")[0] || "",
+    NAME: user.NAME || "",
+    DESIGNATION: user.DESIGNATION || "",
+    DATE_OF_JOINING: user.DOJ?.split("T")[0] || "",
+    MAIL_ID: user.MAIL_ID || "",
+    PHONE: user.PHONE_NUMBER || "",
+    ADDRESS: user.ADDRESS || "",
+    CTC: user.CTC || "",
+    DEPARTMENT: user.DEPARTMENT || "",
+    DATE_OF_INTERVIEW: user.DOI?.split("T")[0] || "",
+    GENDER: user.GENDER || "",
+    EMPLOYEE_ACTIVE_STATUS: user.EMPLOYEE_ACTIVE_STATUS || "",
+    DOCUMENTS_STATUS: user.DOCUMENTS_STATUS || "",
+    ASSET_STATUS: user.ASSET_STATUS || "",
+    BLOOD_GROUP: user.BLOOD_GROUP || "",
+    MARRIED_STATUS: user.MARRIED_STATUS || "",
+    FATHER_NAME: user.FATHER_NAME || "",
+    FATHER_PHONE_NUMBER: user.FATHER_PHONE_NUMBER || "",
+    MOTHER_NAME: user.MOTHER_NAME || "",
+    MOTHER_PHONE_NUMBER: user.MOTHER_PHONE_NUMBER || "",
+    EMERGENCY_CONTACT_NUMBER: user.EMERGENCY_CONTACT_NUMBER || "",
+    GUARDIAN:user.GUARDIAN||"",
+    GUARDIAN_PHONE_NUMBER:user.GUARDIAN_PHONE_NUMBER ||""
   };
 
-  const [formData,setFormData]=useState(tempalete)
+const [formData,setFormData]=useState(tempalete)
+
+  
+  const deleteUser=()=>{
+    axios.delete(`http://localhost:3000/v1/deleteInterview/${ID}`);
+    getDetials(); 
+  }
+ 
   const handleChange=(a)=>{
+
           const {name,value}=a.target;
           setFormData({...formData,[name]:value})
+      
       }
-
-  const submitHandaler=()=>{
-    console.log(formData);
+ 
+  const submitHandaler=async()=>{
+          setFormData({...formData,EMPLOYEE_ACTIVE_STATUS: true});
+        await axios.post("http://localhost:3000/v1/createEmployee",formData)
+        .then((res)=>{
+  
+            toast.success(res.data.message,{position:'top-right',duration: 5000})
+            deleteUser();
+            getDetials();
+            setOpenPopup1(false);
+        })
+        .catch((error)=>{
+  
+            toast.error("some thing went wrong",{position:'top-right',duration: 5000})
+        })
   }
 
   return (
@@ -86,62 +120,153 @@ const Popup1 = ({user}) => {
           <button onClick={()=>setOpenPopup1(false)}  className="text-blue-700 hover:bg-green-50">❎</button>
         </div>
         
+        <form onSubmit={(e) => {
+        e.preventDefault(); // Prevent full-page reload
+        submitHandaler();  // Your original function
+        
+      }}>
         {/* section-1: Employee ID*/}
-        <div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">1. Employee ID</h3>
-          <input
-            type="text"
-            onChange={handleChange}
-            placeholder="Enter Employee ID"
-            className="w-full border rounded-sm px-3 py-2 mb-4"
-        />
-
-        <div className={`${flag ? "text-[#44ed23]" : "text-red-500"} text-[14px]`}>{errormessage}</div>
+         <h3 className="text-lg font-semibold text-yellow-400 mb-3 pt-4">1.Employee ID</h3>
+        <div className="mb-4">
+          <label className="block mb-1 text-sm font-medium text-gray-700">
+            Employee ID<span className="text-red-500"> *</span>
+          
+          <div className="flex gap-2 items-center">
+            <input
+              name="EMPLOYEE_ID"
+              value={formData.EMPLOYEE_ID}
+              onChange={handleChange}
+              className="flex-1 border rounded-sm px-3 py-2"
+            />
             
+            <button
+              type="button"
+              onClick={EmployeeId_Validation}
+              className="mr-59 px-5 ml-3 py-2.5 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+            >
+              Check
+            </button>
+          </div>
+          </label>
+          <div className={` ${flag ? "text-[#44ed23]" : "text-red-500"} text-[14px] mt-3`}>{errorMessage}</div>
         </div>
+        
+
+         
+      
+    
+
         {/* Section 2: User Details */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">2. User Details</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm mb-4">
-            <input name="performanceKey" value={formData.performanceKey} onChange={handleChange} className="border p-2 rounded" placeholder="Performance Key" />
-            <input name="doi" value={formData.doi} onChange={handleChange} className="border p-2 rounded" placeholder="Employee ID" />
-            <input name="name" value={formData.name} onChange={handleChange} className="border p-2 rounded" placeholder="Name" />
-            <input name="designation" value={formData.designation} onChange={handleChange} className="border p-2 rounded" placeholder="Designation" />
-            <input name="doj" value={formData.doj} onChange={handleChange} className="border p-2 rounded" type="date" placeholder="Date of Joining" />
-            <input name="mail" value={formData.mail} onChange={handleChange} className="border p-2 rounded" placeholder="Mail ID" />
-            <input name="phone" value={formData.phone} onChange={handleChange} className="border p-2 rounded" placeholder="Phone" />
-            <input name="address" value={formData.address} onChange={handleChange} className="border p-2 rounded" placeholder="Address" />
-            <input name="ctc" value={formData.ctc} onChange={handleChange} className="border p-2 rounded" placeholder="CTC" />
-            <input name="department" value={formData.department} onChange={handleChange} className="border p-2 rounded" placeholder="Department" />
-            <input name="dob" value={formData.dob} onChange={handleChange} className="border p-2 rounded" type="date" placeholder="Date of Birth" />
-            <input name="gender" value={formData.gender} onChange={handleChange} className="border p-2 rounded" placeholder="Gender" />
+          <h3 className="text-lg font-semibold text-yellow-400 mb-3 pt-8">2.Other Details</h3>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <label>
+              Performance Key<span className='text-red-500 '> *</span>
+              <input name="PERFORMANCE_KEY" value={formData.PERFORMANCE_KEY} onChange={handleChange} required className="border mt-2 p-2 rounded w-full font-medium" />
+            </label>
+            <label>
+              Date of Interview<span className='text-red-500 '> *</span>
+              <input name="DATE_OF_INTERVIEW" value={formData.DATE_OF_INTERVIEW} onChange={handleChange} required className="border mt-2 p-2 rounded w-full" type="date" />
+            </label>
+            <label>
+              Name<span className='text-red-500 '> *</span>
+              <input name="NAME" value={formData.NAME} onChange={handleChange} required className="border p-2 mt-2 rounded w-full" />
+            </label>
+            <label>
+              Designation<span className='text-red-500 '> *</span>
+              <input name="DESIGNATION" value={formData.DESIGNATION} required onChange={handleChange} className="border mt-2 p-2 rounded w-full" />
+            </label>
+            <label>
+              Date of Joining<span className='text-red-500 '> *</span>
+              <input name="DATE_OF_JOINING" value={formData.DATE_OF_JOINING} required onChange={handleChange} className="border mt-2 p-2 rounded w-full" type="date" />
+            </label>
+            <label>
+              Mail ID<span className='text-red-500 '> *</span>
+              <input name="MAIL_ID" value={formData.MAIL_ID} onChange={handleChange} type='email' required  className="border p-2 mt-2 rounded w-full" />
+            </label>
+            <label>
+              Phone Number<span className='text-red-500 '> *</span>
+              <input name="PHONE" value={formData.PHONE} onChange={handleChange} required className="border p-2 mt-2 rounded w-full" />
+            </label>
+            <label>
+              Address
+              <input name="ADDRESS" value={formData.ADDRESS} onChange={handleChange} className="border p-2 mt-2 rounded w-full" />
+            </label>
+            <label>
+              CTC
+              <input name="CTC" value={formData.CTC} onChange={handleChange} type="number" className="border mt-2 p-2 rounded w-full" />
+            </label>
+            <label>
+              Department<span className='text-red-500 '> *</span>
+              <input name="DEPARTMENT" value={formData.DEPARTMENT} required onChange={handleChange} className="border mt-2 p-2 rounded w-full" />
+            </label>
+            <label>
+              Date of Birth<span className='text-red-500 '> *</span>
+              <input name="DATE_OF_BIRTH" value={formData.DATE_OF_BIRTH} required onChange={handleChange} className="border mt-2 p-2 rounded w-full" type="date" />
+            </label>
+            <label>Gender<span className='text-red-500 '> *</span>
+            <select
+                  name="GENDER"
+                  value={formData.GENDER}
+                  onChange={handleChange}
+                  required
+                  className="border p-2 mt-2 rounded w-full"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </label>
+            <label>
+              Married Status
+              <input name="MARRIED_STATUS" value={formData.MARRIED_STATUS} onChange={handleChange} className="border mt-2 p-2 rounded w-full" />
+            </label>
+            <label>
+              Blood Group
+              <input name="BLOOD_GROUP" value={formData.BLOOD_GROUP} onChange={handleChange} className="border mt-2 p-2 rounded w-full" />
+            </label>
+            <label>
+              Emergency Contact Number<span className='text-red-500 '> *</span>
+              <input name="EMERGENCY_CONTACT_NUMBER" type="number" value={formData.EMERGENCY_CONTACT_NUMBER} required onChange={handleChange} className="border mt-2 p-2 rounded w-full" />
+            </label>
           </div>
         </div>
 
         {/* Section 3: Parent Details */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">3. Parent Details</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm mb-4">
-            <input className="border p-2 rounded" placeholder="Parent Name(s)" />
-            <input className="border p-2 rounded" placeholder="Emergency Contact No (Father/Mother)" />
-            <input className="border p-2 rounded" placeholder="Married Status" />
-            <input className="border p-2 rounded" placeholder="Blood Group" />
+          <h3 className="text-lg font-semibold text-yellow-400 mt-9 mb-5">3. Parent Details</h3>
+          <div className="grid grid-cols-2 gap-4 text-sm mb-4 font-">
+            <label>
+              Father's Name
+              <input name="FATHER_NAME" value={formData.FATHER_NAME} onChange={handleChange} className="border p-2 mt-2 rounded w-full" />
+            </label>
+    
+            <label>
+              Father's Phone Number
+              <input name="FATHER_PHONE_NUMBER" value={formData.FATHER_PHONE_NUMBER} onChange={handleChange} className="border mt-2 p-2 rounded w-full" type="number" />
+            </label>
+            <label>
+              Mother's Name
+              <input name="MOTHER_NAME" value={formData.MOTHER_NAME} onChange={handleChange} className="border p-2 mt-2 rounded w-full" />
+            </label>
+            <label>
+              Mother's Phone Number
+              <input name="MOTHER_PHONE_NUMBER" value={formData.MOTHER_PHONE_NUMBER} onChange={handleChange} className="border mt-2 p-2 rounded w-full" type="number" />
+            </label>
+            <label>
+              guardian
+              <input name="GUARDIAN" value={formData.GUARDIAN} onChange={handleChange} className="border mt-2 p-2 rounded w-full" />
+            </label>
+            <label>
+              guardian Phone Number
+              <input name="GUARDIAN_PHONE_NUMBER" value={formData.GUARDIAN_PHONE_NUMBER} onChange={handleChange} className="border mt-2 p-2 rounded w-full" type="number" />
+            </label>
           </div>
         </div>
 
-        {/* Section 4: Document Update */}
-        <div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">4. Document Update</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm mb-4">
-            <input className="border p-2 rounded" placeholder="Aadhar Number" />
-            <input className="border p-2 rounded" placeholder="PAN Number" />
-            <input className="border p-2 rounded" placeholder="Bank Account Number" />
-            <input className="border p-2 rounded" placeholder="IFSC Code" />
-            <input className="border p-2 rounded" placeholder="Passport Number" />
-            <input className="border p-2 rounded" placeholder="Driving License Number" />
-          </div>
-        </div>
 
+  
         <div className="flex justify-end mt-6 gap-3 pt-8">
          
           <button
@@ -151,50 +276,53 @@ const Popup1 = ({user}) => {
             Cancel
           </button>
           <button
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={()=>{setOpenPopup1(false),submitHandaler()}}>
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" type="submit" >
             Onboard
           </button>
 
         </div>
+        </form>
       </div>
     </div>
   );
 };
 
 
-
-  return (
+ return (
     <div className="flex h-screen">
       {/* Sidebar */}
       <div className="bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60">
         <div className="flex flex-col pt-40">
           <Link to="/">
             <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pl-10 transition-all duration-200">
-              <span>☞</span> Dashboard
+              ☞ Dashboard
             </button>
           </Link>
           <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9 transition-all duration-200">
-            <span>☞</span> Interview List
+            ☞ Interview List
           </button>
           <Link to="/onboarding">
             <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
-              <span>☞</span> Onboarding List
+              ☞ Onboarding List
             </button>
           </Link>
-           <Link to={'/employees'}>
-                <button class='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10'><scan class='text-'>☞</scan> Employee List</button>
-            </Link>
+          <Link to="/employees">
+            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10">
+              ☞ Employee List
+            </button>
+          </Link>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-5 overflow-scroll bg-gray-50">
-        <h1 className="text-3xl font-bold text-blue-800 mb-6">Welcome to Onboarding Table</h1>
-        <div className="w-full">
+      <div className="flex-1 p-5 overflow-hidden bg-gray-50">
+      <h1 className="text-3xl font-bold text-blue-800 mb-6">Employee Detials</h1>
+      <div className="w-full">
+        <div className="max-h-[500px] overflow-y-scroll">
           <table className="w-full border-separate border-spacing-y-3">
-            <thead>
+            <thead className="sticky top-0 z-10 bg-yellow-400 text-white">
               <tr className="bg-yellow-400 text-white">
-                <th className="px-6 py-4 text-left font-semibold rounded-tl-lg">Name</th>
+                <th className="px-6 py-4 text-left font-semibold rounded-l-xl">Name</th>
                 <th className="px-6 py-4 text-left font-semibold">DOI</th>
                 <th className="px-6 py-4 text-left font-semibold">DOJ</th>
                 <th className="px-6 py-4 text-left font-semibold">Designation</th>
@@ -206,21 +334,22 @@ const Popup1 = ({user}) => {
             <tbody>
               {Array.isArray(user) && user.length > 0 ? (
                 user.map((x, index) => (
-                  <tr
-                    key={index}
-                    className="bg-white shadow-md rounded-xl overflow-hidden my-4 hover:bg-blue-50 transition-all"
-                  >
+                  <tr key={index} className="bg-white shadow-md rounded-xl hover:bg-blue-50 transition-all">
                     <td className="px-6 py-4 rounded-l-xl font-medium">{x.NAME || '-'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{x.DOI.split("T")[0] || '-'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{x.DOJ.split("T")[0] || '-'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{x.DOI?.split("T")[0] || '-'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{x.DOJ?.split("T")[0] || '-'}</td>
                     <td className="px-6 py-4">{x.DESIGNATION || '-'}</td>
                     <td className="px-6 py-4">{x.DEPARTMENT || '-'}</td>
                     <td className="px-6 py-4">{x.PHONE_NUMBER || '-'}</td>
-                    
                     <td className="px-6 py-4 rounded-r-xl">
-                      <button onClick={()=>{setOpenPopup1(true),setSelectedUser(x)}} className="text-blue-600 hover:text-blue-800 font-medium">View</button>
+                      <button onClick={() => {
+                        setOpenPopup1(true)
+                        setSelectedUser(x)
+                        setID(x.ID)
+                      }} className="text-blue-600 hover:text-blue-800 font-medium">
+                        View
+                      </button>
                     </td>
-      
                   </tr>
                 ))
               ) : (
@@ -231,15 +360,12 @@ const Popup1 = ({user}) => {
                 </tr>
               )}
             </tbody>
-            
-             {openPopup1 && <Popup1 user={selectedUser} />}
-
           </table>
         </div>
+        </div>
+        {openPopup1 && <Popup1 user={selectedUser} />}
       </div>
     </div>
-    
-
   )
 }
 
