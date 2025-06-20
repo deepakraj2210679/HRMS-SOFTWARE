@@ -15,10 +15,11 @@ const Onboarding = () => {
     setuser(res.data)
   }
 
- useEffect(() => {
-  getDetials(); 
-}, []);
+  useEffect(() => {
+    getDetials(); 
+  }, []);
 
+    
 
 
 
@@ -113,7 +114,7 @@ const [formData,setFormData]=useState(tempalete)
   }
 
   return (
-    <div className="fixed inset-0 bg-black/10 backdrop-blur-xs flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black/10 backdrop-blur-xs flex justify-center items-center ">
       <div className="bg-white rounded-lg shadow-xl w-[700px] p-9 overflow-auto max-h-[90vh]">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-blue-800">Onboarding Details</h2>
@@ -288,65 +289,105 @@ const [formData,setFormData]=useState(tempalete)
 };
 
 
- return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <div className="bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60">
-        <div className="flex flex-col pt-40">
-          <Link to="/">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pl-10 transition-all duration-200">
-              ☞ Dashboard
-            </button>
-          </Link>
-          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9 transition-all duration-200">
-            ☞ Interview List
+  return (
+  <div className="flex h-screen">
+    {/* Sidebar (unchanged) */}
+    <div className="bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60">
+      <div className="flex flex-col pt-40">
+        <Link to="/">
+          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pl-10 transition-all duration-200">
+            ☞ Dashboard
           </button>
-          <Link to="/onboarding">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
-              ☞ Onboarding List
+        </Link>
+        <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9 transition-all duration-200">
+          ☞ Interview List
+        </button>
+        <Link to="/onboarding">
+          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
+            ☞ Onboarding List
+          </button>
+        </Link>
+        <Link to="/employees">
+          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10">
+            ☞ Employee List
+          </button>
+        </Link>
+        <Link to="/documents">
+          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10">
+            ☞ Documents
+          </button>
+        </Link>
+        <Link to={'/asset'}>
+            <button className='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200'>
+              ☞ Assets
             </button>
-          </Link>
-          <Link to="/employees">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10">
-              ☞ Employee List
-            </button>
-          </Link>
-        </div>
+        </Link>
       </div>
+    </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-5 overflow-hidden bg-gray-50">
-      <h1 className="text-3xl font-bold text-blue-800 mb-6">Employee Detials</h1>
-      <div className="w-full">
-        <div className="max-h-[500px] overflow-y-scroll">
-          <table className="w-full border-separate border-spacing-y-3">
-            <thead className="sticky top-0 z-10 bg-yellow-400 text-white">
-              <tr className="bg-yellow-400 text-white">
-                <th className="px-6 py-4 text-left font-semibold rounded-l-xl">Name</th>
-                <th className="px-6 py-4 text-left font-semibold">DOI</th>
-                <th className="px-6 py-4 text-left font-semibold">DOJ</th>
-                <th className="px-6 py-4 text-left font-semibold">Designation</th>
-                <th className="px-6 py-4 text-left font-semibold">Department</th>
-                <th className="px-6 py-4 text-left font-semibold">Phone no</th>
-                <th className="px-6 py-4 text-left font-semibold rounded-tr-lg">Option</th>
+    {/* Main Content */}
+    <div className="flex-1 p-5 overflow-hidden bg-gray-50">
+      <h1 className="text-3xl font-bold text-blue-800 mb-6">Onboarding List</h1>
+      
+      <div className="bg-white rounded-lg border-gray-100 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full border rounded-xl border-gray-300">
+            <thead className="bg-yellow-400">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                  Name
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                  DOI
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                  DOJ
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                  Designation
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                  Department
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                  Phone
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider">
+                  Action
+                </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white divide-y divide-gray-300">
               {Array.isArray(user) && user.length > 0 ? (
                 user.map((x, index) => (
-                  <tr key={index} className="bg-white shadow-md rounded-xl hover:bg-blue-50 transition-all">
-                    <td className="px-6 py-4 rounded-l-xl font-medium">{x.NAME || '-'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{x.DOI?.split("T")[0] || '-'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{x.DOJ?.split("T")[0] || '-'}</td>
-                    <td className="px-6 py-4">{x.DESIGNATION || '-'}</td>
-                    <td className="px-6 py-4">{x.DEPARTMENT || '-'}</td>
-                    <td className="px-6 py-4">{x.PHONE_NUMBER || '-'}</td>
-                    <td className="px-6 py-4 rounded-r-xl">
-                      <button onClick={() => {
-                        setOpenPopup1(true)
-                        setSelectedUser(x)
-                        setID(x.ID)
-                      }} className="text-blue-600 hover:text-blue-800 font-medium">
+                  <tr key={index} className="hover:bg-blue-50 transition-colors">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm  text-gray-800 border-r border-gray-200">
+                      {x.NAME || '-'}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {x.DOI?.split("T")[0] || '-'}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {x.DOJ?.split("T")[0] || '-'}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {x.DESIGNATION || '-'}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {x.DEPARTMENT || '-'}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {x.PHONE_NUMBER || '-'}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800">
+                      <button
+                        onClick={() => {
+                          setOpenPopup1(true);
+                          setSelectedUser(x);
+                          setID(x.ID);
+                        }}
+                        className="text-blue-600 hover:text-blue-800 font-medium text-sm px-3 py-1 rounded-md hover:bg-blue-50 transition-colors"
+                      >
                         View
                       </button>
                     </td>
@@ -354,19 +395,26 @@ const [formData,setFormData]=useState(tempalete)
                 ))
               ) : (
                 <tr>
-                  <td colSpan="9" className="text-center py-8 text-gray-500 bg-white rounded-xl shadow">
-                    No users found.
+                  <td colSpan="7" className="text-center py-6 text-gray-500">
+                    <div className="bg-white p-6 rounded-xl shadow-inner border-2 border-dashed border-gray-200">
+                      <div className="flex flex-col items-center">
+                        <span className="text-lg font-medium">No onboarding records found</span>
+                        <span className="text-sm text-gray-400 mt-1">Add candidates to see them here</span>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-        </div>
-        {openPopup1 && <Popup1 user={selectedUser} />}
       </div>
+
+      {openPopup1 && <Popup1 user={selectedUser} />}
     </div>
-  )
+  </div>
+);
+
 }
 
 

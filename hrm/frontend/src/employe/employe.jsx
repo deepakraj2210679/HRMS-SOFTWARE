@@ -4,10 +4,12 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import toast from "react-hot-toast"
 
+
 const Employees = () => {
   const [user, setuser] = useState([])
   const [openPopup1,setOpenPopup1]=useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
+
   
   const getDetials = async () => {
     const res = await axios.get("http://localhost:3000/v1/getEmployee")
@@ -32,32 +34,6 @@ const StatusIndicator1 = ({ status }) => {
   )
 }
 
-const StatusIndicator2 = ({ status }) => {
-  const isCompleted = status == true;
-  const name = isCompleted ? "Completed": "Pending";
-  const icon = isCompleted ? "✅" : "⏳";
-  const color= isCompleted ? "text-green-600" :"text-yellow-600"
-
-  return (
-    <div class={`flex felx-col-2 gap-1 ${color}`}>
-      <span>{icon}</span>
-      <span>{name}</span>
-    </div>
-  );
-}
-const StatusIndicator3 = ({ status }) => {
-  const isCompleted = status == true;
-  const name = isCompleted ? "Completed": "Pending";
-  const icon = isCompleted ? "✅" : "⏳";
-  const color= isCompleted ? "text-green-600" :"text-yellow-600"
-
-  return (
-    <div class={`flex felx-col-2 gap-1 ${color}`}>
-      <span>{icon}</span>
-      <span>{name}</span>
-    </div>
-  );
-};
 
 
 
@@ -140,8 +116,7 @@ const [formData,setFormData]=useState(tempalete)
           <div className="flex gap-2 items-center">
             <input
               value={formData.EMPLOYEE_ID}
-              onChange={handleChange}
-              className="flex-1 border rounded-sm px-3 py-2 mt-4"
+              className="flex-1 border rounded-sm px-3 py-2 mt-4 cursor-not-allowed bg-gray-100 "
             />
           </div>
           </label>
@@ -294,99 +269,140 @@ const [formData,setFormData]=useState(tempalete)
 };
 
 
-return (
-  <div className="flex h-screen">
-    {/* Sidebar */}
-    <div className="bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60">
-      <div className="flex flex-col pt-40">
-        <Link to="/">
-          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pl-10 transition-all duration-200">
-            ☞ Dashboard
-          </button>
-        </Link>
-        <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9 transition-all duration-200">
-          ☞ Interview List
-        </button>
-        <Link to="/onboarding">
-          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
-            ☞ Onboarding List
-          </button>
-        </Link>
-        <Link to="/employees">
-          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10">
-            ☞ Employee List
-          </button>
-        </Link>
-      </div>
-    </div>
+  // ... (previous state and functions remain the same until the return statement)
 
-    {/* Main Content */}
-    <div className="flex-1 p-5 overflow-hidden bg-gray-50">
-      <h1 className="text-3xl font-bold text-blue-800 mb-6">Employee Detials</h1>
-      <div className="w-full"> 
-        <div className="max-h-[500px] overflow-y-scroll custom-scrollbar ">
-          <table className="w-full border-separate border-spacing-y-3">
-            <thead className="sticky top-0 z-10 bg-yellow-400 text-white">
-              <tr>
-                <th className="px-6 py-4 text-left font-semibold rounded-l-xl">Performance Key</th>
-                <th className="px-6 py-4 text-left font-semibold">Employee ID</th>
-                <th className="px-6 py-4 text-left font-semibold">Name</th>
-                <th className="px-6 py-4 text-left font-semibold">Role</th>
-                <th className="px-6 py-4 text-left  font-semibold">DOJ</th>
-                <th className="px-6 py-4 text-left font-semibold">Document Status</th>
-                <th className="px-6 py-4 text-left font-semibold">Asset Status</th>
-                <th className="px-6 py-4 text-left font-semibold">Employee Status</th>
-                <th className="px-6 py-4 text-left font-semibold rounded-r-xl">Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.isArray(user) && user.length > 0 ? (
-                user.map((x, index) => (
-                  <tr
-                    key={index}
-                    className="bg-white shadow-md hover:bg-blue-50 transition-all"
-                  >
-                    <td className="px-6 py-4 rounded-l-xl">{x.PERFORMANCE_KEY}</td>
-                    <td className="px-6 py-4">{x.EMPLOYEE_ID}</td>
-                    <td className="px-6 py-4 font-medium">{x.NAME}</td>
-                    <td className="px-6 py-4">{x.DESIGNATION }</td>
-                    <td className="px-6 py-4 single-line">{x.DATE_OF_JOINING?.split("T")[0]}</td>
-                    <td className="px-6 py-4">
-                      <StatusIndicator2 status={x.DOCUMENTS_STATUS} />
+
+  return (
+    <div className="flex h-screen">
+      {/* Original Blue Sidebar */}
+      <div className="bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60">
+        <div className="flex flex-col pt-40">
+          <Link to="/">
+            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pl-10 transition-all duration-200">
+              ☞ Dashboard
+            </button>
+          </Link>
+          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9 transition-all duration-200">
+            ☞ Interview List
+          </button>
+          <Link to="/onboarding">
+            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
+              ☞ Onboarding List
+            </button>
+          </Link>
+          <Link to="/employees">
+            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
+              ☞ Employee List
+            </button>
+          </Link>
+          <Link to={'/documents'}>
+            <button className='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200'>
+              ☞ Documents
+            </button>
+          </Link>
+           <Link to={'/asset'}>
+            <button className='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200'>
+              ☞ Assets
+            </button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Main Content with Yellow Table */}
+      <div className="flex-1 p-5 overflow-hidden bg-gray-50">
+        <h1 className="text-3xl font-bold text-blue-800 mb-6">Employee Details</h1>
+        
+        {/* Yellow-themed Table */}
+        <div className="bg-white rounded-lg  border-gray-50 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full border rounded-xl border-gray-200">
+              <thead className="bg-yellow-400">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                    Performance Key
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                    Employee ID
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                    Name
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                    Role
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                    DOJ
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                    Document Status
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                    Asset Status
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                    Status
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y  divide-gray-300 ">
+                {user.map((employee, index) => (
+                  <tr key={index} className="hover:bg-blue-50 transition-colors">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-sm text-gray-800 border-r border-gray-200">
+                      {employee.PERFORMANCE_KEY}
                     </td>
-                    <td className="px-6 py-4">
-                      <StatusIndicator3 status={x.ASSET_STATUS } />
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {employee.EMPLOYEE_ID}
                     </td>
-                    <td className="px-6 py-4">
-                      <StatusIndicator1 status={x.EMPLOYEE_ACTIVE_STATUS } />
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-sm text-gray-900 border-r border-gray-200">
+                      {employee.NAME}
                     </td>
-                    <td className="px-6 py-4 rounded-r-xl">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {employee.DESIGNATION}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {employee.DATE_OF_JOINING?.split("T")[0]}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        employee.DOCUMENTS_STATUS ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {employee.DOCUMENTS_STATUS ? 'Completed' : 'Pending'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        employee.ASSET_STATUS ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {employee.ASSET_STATUS ? 'Completed' : 'Pending'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      <span className={`px-2 py-1 text-xs rounded-full ${employee.EMPLOYEE_ACTIVE_STATUS ? 'bg-green-100 text-green-800 ' : 'bg-red-100 text-red-800'}`}>
+                        {employee.EMPLOYEE_ACTIVE_STATUS ? '🟢Active' : '🔴Inactive'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800">
                       <button
-                        onClick={() => {setOpenPopup1(true);setSelectedUser(x);}}
-                        className="text-blue-600 hover:text-blue-800 font-medium"
+                        onClick={() => {setOpenPopup1(true); setSelectedUser(employee);}}
+                        className="text-blue-600 hover:text-blue-800 font-medium text-sm px-3 py-1 rounded-md hover:bg-blue-50 transition-colors"
                       >
                         View
                       </button>
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="9" className="text-center py-8 text-gray-500 bg-white rounded-xl shadow">
-                    No users found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
+        
         {openPopup1 && <Popup1 user={selectedUser} />}
       </div>
     </div>
-  </div>
-);
-
+  );
 }
-
 
 export { Employees }

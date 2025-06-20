@@ -7,7 +7,7 @@ const Dashboard=()=>{
         <div class='h-screen bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60'>
           <div class='flex flex-col pt-40'>
             <Link to={'/'}>
-             <button class='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold text-gradient-to-b from-blue-600 to-blue-900 pl-10'><scan class='text-'>☞</scan> Dashboard</button>
+             <button class='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold text-gradient-to-b from-blue-600 to-blue-900 pl-10'><span class='text-'>☞</span> Dashboard</button>
             </Link>
 
              <button class='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9'><scan class='text-'>☞</scan> Interview List</button>
@@ -18,6 +18,14 @@ const Dashboard=()=>{
                 <button class='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10'><scan class='text-'>☞</scan> Employee List</button>
             </Link>
           
+            <Link to={'/documents'}>
+                <button class='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10'><scan class='text-'>☞</scan>Documents</button>
+            </Link>
+            <Link to={'/asset'}>
+            <button className='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200'>
+              ☞ Assets
+            </button>
+          </Link>
           </div>
         </div>
         

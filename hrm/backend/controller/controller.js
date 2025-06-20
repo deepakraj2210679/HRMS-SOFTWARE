@@ -220,6 +220,7 @@ const DeleteInterview = (req, res) => {
 };
 
 const GetEmployee=(req,res)=>{
+
     const query = 'SELECT * FROM employees';
     db.query(query,(error,results) => {
         if (error) {
@@ -238,4 +239,78 @@ const GetEmployee=(req,res)=>{
     
 }
 
-export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee };
+
+
+const getDocDetial=(req,res)=>{
+     const query = 'SELECT * FROM employee_doc';
+
+    db.query(query,(error,results) => {
+        if (error) {
+            return res.json({ error: 'Database query failed' ,error:error.message});
+        }
+        // Replace null or undefined values with empty strings
+        const cleanedResults=results.map(row=>{
+            const cleanedRow={};
+            for (const key in row) {
+                cleanedRow[key]=row[key] ?? "";
+            }
+            return cleanedRow;
+        });
+        res.json(cleanedResults);
+    });
+           
+}
+
+const DocStatusUpdate = (req, res) => {
+    const { EMPLOYEE_ID, field } = req.body;
+
+    const allowedFields = [
+        "TENTH", "TWELFTH", "DEGREE", "AADHAR", "PAN",
+        "RELIEVING_LETTER", "PAY_SLIP_3_MONTHS", "PARENTS_AADHAR", "DRIVE_LINK"
+    ];
+
+    if (!EMPLOYEE_ID || !field) {
+        return res.json({ message: "EMPLOYEE_ID and field are required." });
+    }
+
+    if (!allowedFields.includes(field)) {
+        return res.json({ message: "Invalid document field name." });
+    }
+
+    const query = `UPDATE employee_doc SET ${field} = 1 WHERE EMPLOYEE_ID = ?`;
+
+    db.query(query, [EMPLOYEE_ID], (error, result) => {
+        if (error) {
+            return res.json({ message: "Failed to update document status", error: error.message });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.json({ message: "No record found with the given EMPLOYEE_ID" });
+        }
+
+        return res.json({ message: `Document '${field}' marked as submitted for employee '${EMPLOYEE_ID}'` });
+    });
+};
+
+const GetAssets = (req, res) => {
+    const query = 'SELECT * FROM assets';
+
+    db.query(query, (error, results) => {
+        if (error) {
+            return res.json({ error: 'Database query failed', details: error.message });
+        }
+
+        // Clean null/undefined fields
+        const cleanedResults = results.map(row => {
+            const cleanedRow = {};
+            for (const key in row) {
+                cleanedRow[key] = row[key] ?? "";
+            }
+            return cleanedRow;
+        });
+
+        res.json(cleanedResults);
+    });
+};
+
+export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets };
