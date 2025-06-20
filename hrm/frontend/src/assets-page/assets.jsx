@@ -13,7 +13,7 @@ const Asset=()=>{
   
 
   const getDetials = async () => {
-    const res = await axios.get("http://localhost:3000/v1/getAssets")
+    const res = await axios.get("https://hrms-software.onrender.com/getAssets")
     setuser(res.data)
     console.log(res.data)
 
@@ -52,7 +52,7 @@ const [formData,setFormData]=useState(tempalete)
 
   
   const deleteUser=()=>{
-    axios.delete(`http://localhost:3000/v1/deleteInterview/${ID}`);
+    axios.delete(`https://hrms-software.onrender.com/deleteInterview/${ID}`);
     getDetials(); 
   }
  
@@ -65,7 +65,7 @@ const [formData,setFormData]=useState(tempalete)
  
   const submitHandaler=async()=>{
           setFormData({...formData,EMPLOYEE_ACTIVE_STATUS: true});
-        await axios.post("http://localhost:3000/v1/createEmployee",formData)
+        await axios.post("https://hrms-software.onrender.com/createEmployee",formData)
         .then((res)=>{
   
             toast.success(res.data.message,{position:'top-right',duration: 5000})

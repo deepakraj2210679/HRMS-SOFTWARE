@@ -15,7 +15,7 @@ const Documents=()=>{
 
 
     const getDetials = async () => {
-    const res = await axios.get("http://localhost:3000/v1/document")
+    const res = await axios.get("https://hrms-software.onrender.com/document")
     setuser(res.data)
 
     }
@@ -28,7 +28,7 @@ const Documents=()=>{
           alert(`Selected "${file.name}" for ${key}`);
 
           const updatedData = { EMPLOYEE_ID: ID, field: col };
-          axios.post("http://localhost:3000/v1/UpdateDocStatus", updatedData).then((res) => {
+          axios.post("https://hrms-software.onrender.com/UpdateDocStatus", updatedData).then((res) => {
             console.log(res);
             getDetials();
           });

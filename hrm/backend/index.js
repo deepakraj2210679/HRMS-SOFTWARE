@@ -6,10 +6,9 @@ import route from "./routes/routes.js"
 
 const app=express()
 const db=mysql.createConnection({
-    //host:'10.10.8.46',
     host:'bvcymhrq4n5yygspnwvr-mysql.services.clever-cloud.com',
     user:'uyps6mbvy2gk7aeq',
-    //user:'devuser',
+  
     password:'zFvxd3HKtuLHxHmox9xK',
     database:'bvcymhrq4n5yygspnwvr',
     port:3306
@@ -35,6 +34,6 @@ app.listen(3000,()=>{
 })
 
 
-app.use("/v1",route)
+app.use("/",route)
 
 export default db
