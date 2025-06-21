@@ -313,4 +313,68 @@ const GetAssets = (req, res) => {
     });
 };
 
-export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets };
+const UpdateAssets = (req, res) => {
+   
+  const {
+    EMPLOYEE_ID,
+    PERFORMANCE_KEY,
+    NAME,
+    DESIGNATION,
+    DEPARTMENT,
+    LOCATION,
+    LAPTOP_STATUS,      
+    LAPTOP_BRAND ,       
+    LAPTOP_MODEL,      
+    LAPTOP_SERIAL_NUMBER,
+    LAPTOP_CHARGER,
+    MOUSE ,       
+    MOBILE_STATUS,       
+    MOBILE_BRAND ,     
+    MOBILE_MODEL ,     
+    MOBILE_IMEI_NUMBER1,
+    MOBILE_IMEI_NUMBER2,
+    MOBILE_CHARGER ,   
+    CUG_NUMBER ,     
+    HEADSET_STATUS,  
+    HEADSET 
+  } = req.body;
+
+  if (!EMPLOYEE_ID) {
+    return res.json({ message: "EMPLOYEE_ID is required for update." });
+  }
+
+  const query = `
+    UPDATE assets
+    SET 
+      PERFORMANCE_KEY = ?, NAME = ?, DESIGNATION = ?, DEPARTMENT = ?, LOCATION = ?,
+      LAPTOP_STATUS = ?, LAPTOP_BRAND = ?, LAPTOP_MODEL = ?, LAPTOP_SERIAL_NUMBER = ?,
+      LAPTOP_CHARGER = ?, MOUSE = ?, MOBILE_STATUS = ?, MOBILE_BRAND = ?, MOBILE_MODEL = ?,
+      MOBILE_IMEI_NUMBER1 = ?, MOBILE_IMEI_NUMBER2 = ?, MOBILE_CHARGER = ?, CUG_NUMBER = ?, 
+      HEADSET_STATUS = ?, HEADSET = ?
+    WHERE EMPLOYEE_ID = ?
+  `;
+
+  const values = [
+    PERFORMANCE_KEY, NAME, DESIGNATION, DEPARTMENT, LOCATION,
+    LAPTOP_STATUS, LAPTOP_BRAND, LAPTOP_MODEL, LAPTOP_SERIAL_NUMBER,
+    LAPTOP_CHARGER, MOUSE, MOBILE_STATUS, MOBILE_BRAND, MOBILE_MODEL,
+    MOBILE_IMEI_NUMBER1, MOBILE_IMEI_NUMBER2, MOBILE_CHARGER,
+    CUG_NUMBER, HEADSET_STATUS, HEADSET,
+    EMPLOYEE_ID 
+  ];
+
+  db.query(query, values, (error, result) => {
+    if (error) {
+      return res.json({ message: "Failed to update the Assets Details", error: error.message });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.json({ message: "No record found with the given EMPLOYEE_ID" });
+    }
+
+    res.json({ message: "Assets record updated successfully" });
+  });
+};
+
+
+export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets,UpdateAssets };

@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from "react"
 import axios from "axios"
+import toast from "react-hot-toast"
 
 
 const Asset=()=>{
@@ -15,8 +16,6 @@ const Asset=()=>{
   const getDetials = async () => {
     const res = await axios.get("https://hrms-software.onrender.com/getAssets")
     setuser(res.data)
-    console.log(res.data)
-
     }
     useEffect(() => {
     getDetials(); 
@@ -24,52 +23,59 @@ const Asset=()=>{
 
 
     const Popup1 = ({user}) => {
-      const tempalete={
+     const tempalete = {
         EMPLOYEE_ID: user.EMPLOYEE_ID || "",
         PERFORMANCE_KEY: user.PERFORMANCE_KEY || "",
         NAME: user.NAME || "",
         DESIGNATION: user.DESIGNATION || "",
         DEPARTMENT: user.DEPARTMENT || "",
         LOCATION: user.LOCATION || "",
-        LAPTOP_STATUS :user.LAPTOP_STATUS || "",      
-        LAPTOP_BRAND  :user.LAPTOP_BRAND || "",       
-        LAPTOP_MODEL  :user.LAPTOP_MODEL || "",      
-        LAPTOP_SERIAL_NUMBER :user.LAPTOP_SERIAL_NUMBER || "",
-        LAPTOP_CHARGER :user.LAPTOP_CHARGER || "",
-        MOUSE :user.MOUSE ||"",       
-        MOBILE_STATUS :user.MOBILE_STATUS || "",       
-        MOBILE_BRAND :user.MOBILE_BRAND || "",     
-        MOBILE_MODEL :user .MOBILE_MODEL || "",     
-        MOBILE_IMEI_NUMBER1 :user.MOBILE_IMEI_NUMBER1 || "",
-        MOBILE_IMEI_NUMBER2 :user.MOBILE_IMEI_NUMBER2 || "",
-        MOBILE_CHARGER :user.  MOBILE_CHARGER || "",   
-        CUG_NUMBER :user.CUG_NUMBER || "",     
-        HEADSET_STATUS :user.HEADSET || "",  
-        HEADSET :user. HEADSET || "" 
-  };
 
-const [formData,setFormData]=useState(tempalete)
+        LAPTOP_STATUS: !! user.LAPTOP_STATUS,     
+        LAPTOP_BRAND: user.LAPTOP_BRAND || "",       
+        LAPTOP_MODEL: user.LAPTOP_MODEL || "",      
+        LAPTOP_SERIAL_NUMBER: user.LAPTOP_SERIAL_NUMBER || "",
+        LAPTOP_CHARGER: user.LAPTOP_CHARGER || "",
+        MOUSE: user.MOUSE || "",       
+
+        MOBILE_STATUS: !!user.MOBILE_STATUS,     
+        MOBILE_BRAND: user.MOBILE_BRAND || "",     
+        MOBILE_MODEL: user.MOBILE_MODEL || "",     
+        MOBILE_IMEI_NUMBER1: user.MOBILE_IMEI_NUMBER1 || "",
+        MOBILE_IMEI_NUMBER2: user.MOBILE_IMEI_NUMBER2 || "",
+        MOBILE_CHARGER: user.MOBILE_CHARGER || "",   
+
+        CUG_NUMBER: user.CUG_NUMBER || "",     
+        HEADSET_STATUS: !!user.HEADSET_STATUS,  
+        HEADSET: user.HEADSET || "" 
+      };
+
+      
+
+      const [formData,setFormData]=useState(tempalete)
 
   
-  const deleteUser=()=>{
-    axios.delete(`https://hrms-software.onrender.com/deleteInterview/${ID}`);
-    getDetials(); 
-  }
+      const toBoolean = (value) => {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'string') return value.toLowerCase() === 'true';
+  return false;
+};
+
+// Then use it like:
+
+  
  
   const handleChange=(a)=>{
 
           const {name,value}=a.target;
           setFormData({...formData,[name]:value})
-      
       }
  
-  const submitHandaler=async()=>{
-          setFormData({...formData,EMPLOYEE_ACTIVE_STATUS: true});
-        await axios.post("https://hrms-software.onrender.com/createEmployee",formData)
+  const submitHandaler=async(req,res)=>{          
+        await axios.post("https://hrms-software.onrender.com/UpdateAsset",formData)
         .then((res)=>{
-  
+            console.log(res)
             toast.success(res.data.message,{position:'top-right',duration: 5000})
-            deleteUser();
             getDetials();
             setOpenPopup1(false);
         })
@@ -86,7 +92,10 @@ const [formData,setFormData]=useState(tempalete)
           <h2 className="text-2xl font-bold text-blue-800">Assets Details</h2>
           <button onClick={()=>setOpenPopup1(false)}  className="text-blue-700 hover:bg-green-50">❎</button>
           </div>
-        <form>
+          <form onSubmit={(e) => {
+            e.preventDefault();  // Prevents the default form submit (page reload)
+            submitHandaler();
+          }}>
         {/* Section 2: User Details */}
        <div>
         <h3 className="text-lg font-semibold text-yellow-400 mb-3 pt-8">1. Employee Details</h3>
@@ -150,126 +159,160 @@ const [formData,setFormData]=useState(tempalete)
 
 
       
+         {/* === LAPTOP SECTION === */}
+        <h3 className="text-lg font-semibold text-yellow-500 mt-9 mb-5">2. Laptop</h3>
 
-
-        <div>
-          <h3 className="text-lg font-semibold text-yellow-400 mt-9 mb-5">2. Laptop</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm mb-4 font-">
-            <label>
-              Laptop Brand<span className='text-red-500 '> *</span>
-              <input name="LAPTOP_BRAND" value={formData.LAPTOP_BRAND} required onChange={handleChange} className="border p-2 mt-2 rounded w-full" type='text'/>
-            </label>
-    
-            <label>
-              Laptop Model<span className='text-red-500 '> *</span>
-              <input name="LAPTOP_MODEL" value={formData.LAPTOP_MODEL} required  onChange={handleChange} className="border mt-2 p-2 rounded w-full" type='text' />
-            </label>
-            <label>
-              Laptop Serial Number<span className='text-red-500 '> *</span>
-              <input name="CUG_NUMBER" value={formData.LAPTOP_SERIAL_NUMBER} required onChange={handleChange} className="border p-2 mt-2 rounded w-full" />
-            </label>
-            <label>
-              Laptop Charger<span className='text-red-500 '> *</span>
-              <select
-                  name="LAPTOP_CHARGER"
-                  value={formData.LAPTOP_CHARGER}
-                  onChange={handleChange}
-                  required
-                  className="border p-2 mt-2 rounded  w-full"
-                >
-                  <option value="">Select</option>
-                  <option value="YES">YES</option>
-                  <option value="NO">NO</option>
-                </select>
-            </label>
-            <label>
-              Mouse<span className='text-red-500 '> *</span>
-             <select
-                  name="MOUSE"
-                  value={formData.MOUSE}
-                  onChange={handleChange}
-                  required
-                  className="border p-2 mt-2 rounded  w-full"
-                >
-                  <option value="">Select</option>
-                  <option value="YES">YES</option>
-                  <option value="NO">NO</option>
-                </select>
-            </label>
-            
-          </div>
+        <div className="flex items-center gap-4 mb-6">
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={formData.LAPTOP_STATUS}
+              onChange={() => {
+                const updatedStatus=!formData.LAPTOP_STATUS;
+                setFormData({ ...formData,LAPTOP_STATUS: updatedStatus });
+              }}
+            />
+            <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-all duration-300"></div>
+            <div className="absolute left-[3px] top-[3px] w-3.5 h-3.5 bg-white rounded-full peer-checked:translate-x-5 transform transition-all duration-300"></div>
+          </label>
+          <span className={`text-sm font-semibold ${formData.LAPTOP_STATUS ? 'text-green-600' : 'text-gray-400'}`}>
+            {formData.LAPTOP_STATUS ? 'Applicable' : 'Not Applicable'}
+          </span>
         </div>
 
-        <div>
-          <h3 className="text-lg font-semibold text-yellow-400 mt-9 mb-5">3. Mobile</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm mb-4 font-">
+        {formData.LAPTOP_STATUS && (
+          <div className="grid grid-cols-2 gap-4 text-sm mb-4">
             <label>
-              Mobile Brand<span className='text-red-500 '> *</span>
+              Laptop Brand<span className='text-red-500'> *</span>
+              <input name="LAPTOP_BRAND" value={formData.LAPTOP_BRAND} required onChange={handleChange} className="border p-2 mt-2 rounded w-full" type='text'/>
+            </label>
+            <label>
+              Laptop Model<span className='text-red-500'> *</span>
+              <input name="LAPTOP_MODEL" value={formData.LAPTOP_MODEL} required onChange={handleChange} className="border mt-2 p-2 rounded w-full" type='text' />
+            </label>
+            <label>
+              Laptop Serial Number<span className='text-red-500'> *</span>
+              <input name="LAPTOP_SERIAL_NUMBER" value={formData.LAPTOP_SERIAL_NUMBER} required onChange={handleChange} className="border p-2 mt-2 rounded w-full" />
+            </label>
+            <label>
+              Laptop Charger<span className='text-red-500'> *</span>
+              <select name="LAPTOP_CHARGER" value={formData.LAPTOP_CHARGER} onChange={handleChange} required className="border p-2 mt-2 rounded w-full">
+                <option value="">Select</option>
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
+            </label>
+            <label>
+              Mouse<span className='text-red-500'> *</span>
+              <select name="MOUSE" value={formData.MOUSE} onChange={handleChange} required className="border p-2 mt-2 rounded w-full">
+                <option value="">Select</option>
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
+            </label>
+          </div>
+        )}
+
+        {/* === MOBILE SECTION === */}
+        <h3 className="text-lg font-semibold text-yellow-400 mt-9 mb-5">3. Mobile</h3>
+
+        <div className="flex items-center gap-4 mb-6">
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={formData.MOBILE_STATUS}
+              onChange={() => {
+               
+                const updatedStatus = !formData.MOBILE_STATUS;
+                setFormData({ ...formData, MOBILE_STATUS: updatedStatus });
+                
+                
+              }}
+            />
+            <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-all duration-300"></div>
+            <div className="absolute left-[3px] top-[3px] w-3.5 h-3.5 bg-white rounded-full peer-checked:translate-x-5 transform transition-all duration-300"></div>
+          </label>
+          <span className={`text-sm font-semibold ${formData.MOBILE_STATUS ? 'text-green-600' : 'text-gray-400'}`}>
+            {formData.MOBILE_STATUS ? 'Applicable' : 'Not Applicable'}
+          </span>
+        </div>
+
+        {formData.MOBILE_STATUS && (
+          <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+            <label>
+              Mobile Brand<span className='text-red-500'> *</span>
               <input name="MOBILE_BRAND" value={formData.MOBILE_BRAND} required onChange={handleChange} className="border p-2 mt-2 rounded w-full" type='text'/>
             </label>
-    
             <label>
-              Mobile Model<span className='text-red-500 '> *</span>
-              <input name="MOBILE_MODEL" value={formData.MOBILE_MODEL} required  onChange={handleChange} className="border mt-2 p-2 rounded w-full" type='text' />
+              Mobile Model<span className='text-red-500'> *</span>
+              <input name="MOBILE_MODEL" value={formData.MOBILE_MODEL} required onChange={handleChange} className="border mt-2 p-2 rounded w-full" type='text' />
             </label>
             <label>
-              Mobile IMEI Number-1<span className='text-red-500 '> *</span>
+              Mobile IMEI Number-1<span className='text-red-500'> *</span>
               <input name="MOBILE_IMEI_NUMBER1" value={formData.MOBILE_IMEI_NUMBER1} required onChange={handleChange} className="border p-2 mt-2 rounded w-full" />
             </label>
             <label>
               Mobile IMEI Number-2
               <input name="MOBILE_IMEI_NUMBER2" value={formData.MOBILE_IMEI_NUMBER2} onChange={handleChange} className="border p-2 mt-2 rounded w-full" />
             </label>
-
             <label>
-              Mobile Charger<span className='text-red-500 '> *</span>
-              <select
-                  name="MOBILE_CHARGER"
-                  value={formData.MOBILE_CHARGER}
-                  onChange={handleChange}
-                  required
-                  className="border p-2 mt-2 rounded  w-full"
-                >
-                  <option value="">Select</option>
-                  <option value="YES">YES</option>
-                  <option value="NO">NO</option>
-                </select>
+              Mobile Charger<span className='text-red-500'> *</span>
+              <select name="MOBILE_CHARGER" value={formData.MOBILE_CHARGER} onChange={handleChange} required className="border p-2 mt-2 rounded w-full">
+                <option value="">Select</option>
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
             </label>
-            <label>
-              CUG Number<span className='text-red-500 '> *</span>
-              <input name="CUG_NUMBER" value={formData.CUG_NUMBER} required onChange={handleChange} className="border p-2 mt-2 rounded w-full" type="number" />
-            </label>
-
           </div>
+        )}
+
+        {/* === HEADSET / OTHER ASSETS SECTION === */}
+        <h3 className="text-lg font-semibold text-yellow-400 mt-9 mb-5">4. Other Assets</h3>
+
+        <div className="flex items-center gap-4 mb-6">
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={formData.HEADSET_STATUS}
+              onChange={() => {
+                const updatedStatus = !formData.HEADSET_STATUS;
+                setFormData({ ...formData, HEADSET_STATUS: updatedStatus });
+              }}
+            />
+            <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-green-500   transition-all duration-300"></div>
+            <div className="absolute left-[3px] top-[3px] w-3.5 h-3.5 bg-white rounded-full peer-checked:translate-x-5 transform transition-all duration-300"></div>
+          </label>
+          <span className={`text-sm font-semibold ${formData.HEADSET_STATUS ? 'text-green-600' : 'text-gray-400'}`}>
+            {formData.HEADSET_STATUS ? 'Applicable' : 'Not Applicable'}
+          </span>
         </div>
 
-        <div>
-          <h3 className="text-lg font-semibold text-yellow-400 mt-9 mb-5">3. Headset</h3>
+        {formData.HEADSET_STATUS && (
           <div className="grid grid-cols-2 gap-4 text-sm mb-4">
             <label>
-              HeadSet<span className='text-red-500 '> *</span>
-              <select
-                  name="HEADSET"
-                  value={formData.HEADSET}
-                  onChange={handleChange}
-                  required
-                  className="border p-2 mt-2 rounded  w-full"
-                >
-                  <option value="">Select</option>
-                  <option value="YES">YES</option>
-                  <option value="NO">NO</option>
-                </select>
+              HeadSet<span className='text-red-500'> *</span>
+              <select name="HEADSET" value={formData.HEADSET} onChange={handleChange} required className="border p-2 mt-2 rounded w-full">
+                <option value="">Select</option>
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
+            </label>
+            <label>
+              CUG Number
+              <input name="CUG_NUMBER" value={formData.CUG_NUMBER} onChange={handleChange} className="border p-2 mt-2 rounded w-full" type="number" />
             </label>
           </div>
-        </div>
+        )}
+
 
       <div className="flex justify-end mt-6 gap-3 pt-8">
-              
         <button
             onClick={()=>setOpenPopup1(false)}
             className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
-        >
-        Cancel
+        >Cancel
         </button>
         <button
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" type="submit" >
@@ -387,14 +430,14 @@ const [formData,setFormData]=useState(tempalete)
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
                       {x.LOCATION }
                     </td>
-                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
-                      {x.LAPTOP_STATUS ? '✅' : '  '}
+                     <td className="px-4 py-3 pl-6 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {x.LAPTOP_STATUS ? '✅' : ' -'}
                     </td>
-                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
-                      {x.MOBILE_STSTUS ? '✅' : '  '}
+                     <td className="px-4 py-3 pl-6 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {x.MOBILE_STATUS ? '✅' : '-'}
                     </td>
-                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
-                      {x.HEADSET_STATUS ? '✅' : '  '}
+                     <td className="px-4 py-3 pl-6 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {x.HEADSET_STATUS ? '✅' : '-'}
                     </td>
                      
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800">
