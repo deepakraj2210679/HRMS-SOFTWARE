@@ -275,41 +275,9 @@ const [formData,setFormData]=useState(tempalete)
   return (
     <div className="flex h-screen">
       {/* Original Blue Sidebar */}
-      <div className="bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60">
-        <div className="flex flex-col pt-40">
-          <Link to="/">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pl-10 transition-all duration-200">
-              ☞ Dashboard
-            </button>
-          </Link>
-          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9 transition-all duration-200">
-            ☞ Interview List
-          </button>
-          <Link to="/onboarding">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
-              ☞ Onboarding List
-            </button>
-          </Link>
-          <Link to="/employees">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
-              ☞ Employee List
-            </button>
-          </Link>
-          <Link to={'/documents'}>
-            <button className='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200'>
-              ☞ Documents
-            </button>
-          </Link>
-           <Link to={'/asset'}>
-            <button className='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200'>
-              ☞ Assets
-            </button>
-          </Link>
-        </div>
-      </div>
-
+     
       {/* Main Content with Yellow Table */}
-      <div className="flex-1 p-5 overflow-hidden bg-gray-50">
+      <div className="flex-1 p-7 pl-10 overflow-hidden bg-gray-50">
         <h1 className="text-3xl font-bold text-blue-800 mb-6">Employee Details</h1>
         
         {/* Yellow-themed Table */}
@@ -348,7 +316,8 @@ const [formData,setFormData]=useState(tempalete)
                 </tr>
               </thead>
               <tbody className="bg-white divide-y  divide-gray-300 ">
-                {user.map((employee, index) => (
+                {Array.isArray(user) && user.length>0 ? (
+                user.map((employee, index) => (
                   <tr key={index} className="hover:bg-blue-50 transition-colors">
                     <td className="px-4 py-3 whitespace-nowrap text-sm font-sm text-gray-800 border-r border-gray-200">
                       {employee.PERFORMANCE_KEY}
@@ -393,7 +362,21 @@ const [formData,setFormData]=useState(tempalete)
                       </button>
                     </td>
                   </tr>
-                ))}
+                ))
+              ):
+              (
+                 <tr>
+                  <td colSpan="20" className="text-center  text-gray-500">
+                    <div className="bg-white p-6 rounded-xl shadow-inner border-2 border-dashed border-gray-200">
+                      <div className="flex flex-col items-center">
+                        <span className="text-lg font-medium">No Employee records found</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              )
+              
+              }
               </tbody>
             </table>
           </div>

@@ -330,41 +330,9 @@ const Asset=()=>{
     <>
       <div className="flex h-screen">
       {/* Original Blue Sidebar */}
-      <div className="bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60">
-        <div className="flex flex-col pt-40">
-          <Link to="/">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pl-10 transition-all duration-200">
-              ☞ Dashboard
-            </button>
-          </Link>
-          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9 transition-all duration-200">
-            ☞ Interview List
-          </button>
-          <Link to="/onboarding">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
-              ☞ Onboarding List
-            </button>
-          </Link>
-          <Link to="/employees">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10">
-              ☞ Employee List
-            </button>
-          </Link>
-          <Link to={'/documents'}>
-            <button className='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10'>
-              <span className='text-'>☞</span> Documents
-            </button>
-          </Link>
-          <Link to={'/asset'}>
-            <button className='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200'>
-              ☞ Assets
-            </button>
-          </Link>
-        </div>
-      </div>
-
+     
       {/* Main Content with Yellow Table */}
-      <div className="flex-1 p-5  bg-gray-50">
+      <div className="flex-1 p-7 pl-10  bg-gray-50">
         <h1 className="text-3xl font-bold text-blue-800 mb-6">Assets List</h1>
         
         {/* Yellow-themed Table */}
