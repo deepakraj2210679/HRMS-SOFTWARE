@@ -11,7 +11,7 @@ const Onboarding = () => {
   const [ID,setID]=useState(0);
 
   const getDetials = async () => {
-    const res = await axios.get("http://localhost:3000/getUsers")
+    const res = await axios.get("https://hrms-software-frontend.onrender.com/getUsers")
     setuser(res.data)
   }
 

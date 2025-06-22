@@ -16,7 +16,7 @@ const Navigate=useNavigate();
 const actionSubmit=async(e)=>{
     e.preventDefault()
 
-        const res=await axios.post("http://localhost:3000/Login",{email,password})
+        const res=await axios.post("https://hrms-software-frontend.onrender.com/Login",{email,password})
         .then((res)=>{
            settoken(res.data.token)
             localStorage.setItem("authToken",res.data.token)

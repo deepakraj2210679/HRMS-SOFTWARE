@@ -14,7 +14,7 @@ const Asset=()=>{
   
 
   const getDetials = async () => {
-    const res = await axios.get("http://localhost:3000/getAssets")
+    const res = await axios.get("https://hrms-software-frontend.onrender.com/getAssets")
     setuser(res.data)
     }
     useEffect(() => {
@@ -72,7 +72,7 @@ const Asset=()=>{
       }
  
   const submitHandaler=async(req,res)=>{          
-        await axios.post("http://localhost:3000/UpdateAsset",formData)
+        await axios.post("https://hrms-software-frontend.onrender.com/UpdateAsset",formData)
 
         .then((res)=>{
            
