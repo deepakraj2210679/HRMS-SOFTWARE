@@ -10,6 +10,8 @@ import { Asset } from './pages/assets-page/assets.jsx'
 
 import AdminLayout from './layout/AdminLayout';
 import { Interview } from './pages/interview/intervies.jsx'
+import { PrivateRoute } from './layout/Private.jsx'
+import { LoginPage } from './layout/AdminLogin.jsx'
 
 
 function App() {
@@ -17,14 +19,17 @@ function App() {
 
   return (
   <Routes>
-    <Route path="/" element={ <AdminLayout />}>
-      <Route index element={<Dashboard />}/>
-      <Route path='/interview' element={<Interview/>} />
-      <Route path='/onboarding' element={<Onboarding />} />
-      <Route path='/employees' element={<Employees />} />
-      <Route path='/documents' element={<Documents/>} />
-      <Route path='/updateDoc' element={<UpdateDocuments/>} />
-      <Route path='/asset' element={<Asset/>} />
+    <Route index path='/' element={<LoginPage/>} />
+    <Route element={<PrivateRoute/>}>
+      <Route  element={ <AdminLayout />}>
+        <Route path='/dashboard' element={<Dashboard />}/>
+        <Route path='/interview' element={<Interview/>} />
+        <Route path='/onboarding' element={<Onboarding />} />
+        <Route path='/employees' element={<Employees />} />
+        <Route path='/documents' element={<Documents/>} />
+        <Route path='/updateDoc' element={<UpdateDocuments/>} />
+        <Route path='/asset' element={<Asset/>} />
+      </Route>
     </Route>
   </Routes>
   )

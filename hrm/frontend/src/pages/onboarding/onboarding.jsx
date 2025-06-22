@@ -11,7 +11,7 @@ const Onboarding = () => {
   const [ID,setID]=useState(0);
 
   const getDetials = async () => {
-    const res = await axios.get("https://hrms-software.onrender.com/getUsers")
+    const res = await axios.get("http://localhost:3000/getUsers")
     setuser(res.data)
   }
 
@@ -37,7 +37,7 @@ const Popup1 = ({user}) => {
     }
     else
     {
-        const Eid=await axios.get(`https://hrms-software.onrender.com/getuser/${formData.EMPLOYEE_ID}`);
+        const Eid=await axios.get(`http://localhost:3000/getuser/${formData.EMPLOYEE_ID}`);
         if (Eid.data.message != "found") 
         {
           setErrorMessage(`✅ ${formData.EMPLOYEE_ID} does not exist. You can proceed.`);
@@ -86,7 +86,7 @@ const [formData,setFormData]=useState(tempalete)
 
   
   const deleteUser=()=>{
-    axios.delete(`https://hrms-software.onrender.com/deleteInterview/${ID}`);
+    axios.delete(`http://localhost:3000/deleteInterview/${ID}`);
     getDetials(); 
   }
  
@@ -99,7 +99,7 @@ const [formData,setFormData]=useState(tempalete)
  
   const submitHandaler=async()=>{
           setFormData({...formData,EMPLOYEE_ACTIVE_STATUS: true});
-        await axios.post("https://hrms-software.onrender.com/createEmployee",formData)
+        await axios.post("http://localhost:3000/createEmployee",formData)
         .then((res)=>{
   
             toast.success(res.data.message,{position:'top-right',duration: 5000})

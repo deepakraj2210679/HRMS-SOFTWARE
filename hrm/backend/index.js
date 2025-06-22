@@ -37,6 +37,7 @@ app.use(cors());
 app.get("/hi", (req, res) => {
     res.send("Hello world");
 });
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/", route);
 

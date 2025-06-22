@@ -1,4 +1,5 @@
 import db from '../index.js';
+import jwt from 'jsonwebtoken';
 
 const getInterviewList=(req,res)=>{
     const query = 'SELECT * FROM interview_list';
@@ -377,4 +378,42 @@ const UpdateAssets = (req, res) => {
 };
 
 
-export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets,UpdateAssets };
+const Login = (req, res) => {
+    const { email, password } = req.body;
+   
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and Password are required." });
+    }
+
+    const query = 'SELECT * FROM login WHERE EMAIL = ?';
+
+    db.query(query, [email], (error, results) => {
+        if (error) {
+            return res.status(500).json({ message: "Database query failed", error: error.message });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "User not found!" });
+        }
+
+        const user = results[0];
+       
+        // Plain-text password comparison
+        if (user.PASSWORD != password) {
+            return res.status(401).json({ message: "Incorrect password!" });
+        }
+
+        // Create JWT token
+        const token = jwt.sign({ id: user.EMAIL }, "demo", { expiresIn: "2d" });
+
+        res.status(200).json({
+            message: "Login successful",
+            token,
+            email: user.EMAIL,
+        });
+    });
+};
+
+
+export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets,UpdateAssets,Login };

@@ -1,5 +1,5 @@
 import express from 'express'
-import {updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets, UpdateAssets} from '../controller/controller.js'
+import {updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets, UpdateAssets, Login} from '../controller/controller.js'
 
 
 const route=express.Router()
@@ -14,5 +14,6 @@ route.get("/document",getDocDetial)
 route.post("/UpdateDocStatus",DocStatusUpdate)
 route.get("/getAssets",GetAssets)
 route.post("/updateAsset",UpdateAssets)
+route.post("/login",Login)
 
 export default route

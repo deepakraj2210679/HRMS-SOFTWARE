@@ -17,7 +17,7 @@ const AdminSidebar = () => {
 
   <ul className="admin_menu_list">
     <li>
-      <NavLink to="/" end className={({ isActive }) => isActive ? 'nav-link active-link' : 'nav-link'}>
+      <NavLink to="/dashboard" end className={({ isActive }) => isActive ? 'nav-link active-link' : 'nav-link'}>
         <img src={Admin_dashboard} width={15} style={{ marginRight: 8 }} />
         Dashboard
       </NavLink>

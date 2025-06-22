@@ -14,7 +14,7 @@ const Asset=()=>{
   
 
   const getDetials = async () => {
-    const res = await axios.get("https://hrms-software.onrender.com/getAssets")
+    const res = await axios.get("http://localhost:3000/getAssets")
     setuser(res.data)
     }
     useEffect(() => {
@@ -72,9 +72,10 @@ const Asset=()=>{
       }
  
   const submitHandaler=async(req,res)=>{          
-        await axios.post("https://hrms-software.onrender.com/UpdateAsset",formData)
+        await axios.post("http://localhost:3000/UpdateAsset",formData)
+
         .then((res)=>{
-            console.log(res)
+           
             toast.success(res.data.message,{position:'top-right',duration: 5000})
             getDetials();
             setOpenPopup1(false);
@@ -328,15 +329,14 @@ const Asset=()=>{
 
     return (
     <>
-      <div className="flex h-screen">
+     <div className="flex h-screen">
       {/* Original Blue Sidebar */}
      
       {/* Main Content with Yellow Table */}
-      <div className="flex-1 p-7 pl-10  bg-gray-50">
+      <div className="flex-1 p-7 pl-10 overflow-hidden bg-gray-50">
         <h1 className="text-3xl font-bold text-blue-800 mb-6">Assets List</h1>
-        
         {/* Yellow-themed Table */}
-        <div className="bg-white rounded-lg  border-gray-50 overflow-hidden">
+         <div className="bg-white rounded-lg  border-gray-50 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full border rounded-xl border-gray-200">
               <thead className="bg-yellow-400">
@@ -350,10 +350,10 @@ const Asset=()=>{
                   <th className="px-3 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
                     Name
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                  <th className="px-3 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
                     Designation
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                  <th className="px-3 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
                     Departnment
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
@@ -371,6 +371,7 @@ const Asset=()=>{
                   <th className="px-3 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
                     Option
                   </th>
+                  
                   
                  
                 </tr>
