@@ -12,7 +12,7 @@ const UpdateDocuments=()=>{
     const [openPopup1,setOpenPopup1]=useState(false)
 
     const getDetials = async () => {
-    const res = await axios.get("https://hrms-software-frontend.onrender.com/document")
+    const res = await axios.get("https://hrms-software.onrender.com/document")
     setuser(res.data)
 
     }
@@ -28,7 +28,7 @@ const UpdateDocuments=()=>{
           alert(`Selected "${file.name}" for ${key}`);
 
           const updatedData = { EMPLOYEE_ID: ID, field: col };
-          axios.post("https://hrms-software-frontend.onrender.com/UpdateDocStatus", updatedData).then((res) => {
+          axios.post("https://hrms-software.onrender.com/UpdateDocStatus", updatedData).then((res) => {
             console.log(res);
             getDetials();
           });
