@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import logo from '../assets/logo.png';
+import logo1 from '../assets/nouuu.png';
 const LoginPage=()=>{
 
 
@@ -34,7 +35,7 @@ const actionSubmit=async(e)=>{
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-xl rounded-xl">
         <div className="flex flex-col items-center">
-          <img src={logo}   className="w-32 h-32 object-contain rounded-full border border-gray-300 p-5 m-2 bg-white"/>
+          <img src={logo1}   className="w-36 h-35   bg-white"/>
           <h2 className="text-3xl font-bold text-yellow-600">NoQu HRMS Login</h2>
         </div>
         <form onSubmit={actionSubmit} className="space-y-6">
