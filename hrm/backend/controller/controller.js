@@ -1,5 +1,6 @@
 import db from '../index.js';
 import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 
 const getInterviewList=(req,res)=>{
     const query = 'SELECT * FROM interview_list';
@@ -33,6 +34,7 @@ const updateList = (req, res) => {
         ADDRESS,
         CTC,
         DEPARTMENT,
+        LOCATION,
         DATE_OF_INTERVIEW,
         GENDER,
         EMPLOYEE_ACTIVE_STATUS,
@@ -57,7 +59,7 @@ const updateList = (req, res) => {
         UPDATE employees
         SET 
             PERFORMANCE_KEY = ?, DATE_OF_BIRTH = ?, NAME = ?, DESIGNATION = ?, DATE_OF_JOINING = ?,
-            MAIL_ID = ?, PHONE = ?, ADDRESS = ?, CTC = ?, DEPARTMENT = ?, DATE_OF_INTERVIEW = ?,
+            MAIL_ID = ?, PHONE = ?, ADDRESS = ?, CTC = ?, DEPARTMENT = ?,LOCATION=?, DATE_OF_INTERVIEW = ?,
             GENDER = ?, EMPLOYEE_ACTIVE_STATUS = ?, DOCUMENTS_STATUS = ?, ASSET_STATUS = ?,
             BLOOD_GROUP = ?, MARRIED_STATUS = ?, FATHER_NAME = ?, MOTHER_NAME = ?,
             FATHER_PHONE_NUMBER = ?, MOTHER_PHONE_NUMBER = ?, EMERGENCY_CONTACT_NUMBER = ?,
@@ -67,7 +69,7 @@ const updateList = (req, res) => {
 
     const values = [
         PERFORMANCE_KEY, DATE_OF_BIRTH, NAME, DESIGNATION, DATE_OF_JOINING,
-        MAIL_ID, PHONE, ADDRESS, CTC, DEPARTMENT, DATE_OF_INTERVIEW,
+        MAIL_ID, PHONE, ADDRESS, CTC, DEPARTMENT,LOCATION, DATE_OF_INTERVIEW,
         GENDER, EMPLOYEE_ACTIVE_STATUS, DOCUMENTS_STATUS, ASSET_STATUS,
         BLOOD_GROUP, MARRIED_STATUS, FATHER_NAME, MOTHER_NAME,
         FATHER_PHONE_NUMBER, MOTHER_PHONE_NUMBER, EMERGENCY_CONTACT_NUMBER,
@@ -127,6 +129,7 @@ const AddEmployee = (req, res) => {
         ADDRESS,
         CTC,
         DEPARTMENT,
+        LOCATION,
         DATE_OF_INTERVIEW, 
         GENDER,
         EMPLOYEE_ACTIVE_STATUS,
@@ -156,12 +159,12 @@ const AddEmployee = (req, res) => {
     const query = `
         INSERT INTO employees (
             EMPLOYEE_ID, PERFORMANCE_KEY, DATE_OF_BIRTH, NAME, DESIGNATION,
-            DATE_OF_JOINING, MAIL_ID, PHONE, ADDRESS, CTC, DEPARTMENT,
+            DATE_OF_JOINING, MAIL_ID, PHONE, ADDRESS, CTC, DEPARTMENT,LOCATION,
             DATE_OF_INTERVIEW, GENDER, EMPLOYEE_ACTIVE_STATUS, DOCUMENTS_STATUS,
             ASSET_STATUS, BLOOD_GROUP, MARRIED_STATUS, FATHER_NAME,
             FATHER_PHONE_NUMBER, MOTHER_NAME, MOTHER_PHONE_NUMBER, EMERGENCY_CONTACT_NUMBER,
             GUARDIAN,GUARDIAN_PHONE_NUMBER
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
@@ -176,6 +179,7 @@ const AddEmployee = (req, res) => {
         normalize(ADDRESS),
         normalize(CTC),
         normalize(DEPARTMENT),
+        normalize(LOCATION),
         normalize(DATE_OF_INTERVIEW),
         normalize(GENDER),
         normalize(EMPLOYEE_ACTIVE_STATUS),
@@ -415,5 +419,94 @@ const Login = (req, res) => {
     });
 };
 
+const sendEmail=async(req,res)=>{
+     const { OTP, recipitent_email } = req.body;
 
-export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets,UpdateAssets,Login };
+    if (!OTP || !recipitent_email) {
+        return res.status(400).json({ message: "OTP and recipient email are required." });
+    }
+
+    // Create a transporter using your email service
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'deepakaero20000@gmail.com', // replace with your email
+            pass: 'ugehymxkcdepsysv'     // use an App Password if using Gmail
+        }
+    });
+
+    // Email options
+    const mailOptions = {
+    from: 'deepakaero20000@gmail.com',
+    to: recipitent_email,
+    subject: 'Your OTP Code',
+    html: `
+        <p>Hello,</p>
+        <p>You requested to verify your email. Please use the OTP below to complete the verification:</p>
+        <h3>Your OTP is: <span style="color: #ffbb00;">${OTP}</span></h3>
+        <p>This OTP is valid for 10 minutes. Please do not share it with anyone.</p>
+        <br/>
+        <p>Regards,<br/>Hrms NOQU</p>
+    `
+};
+
+
+    // Send the email
+    try {
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ message: "OTP sent successfully" });
+    } catch (error) {
+        console.error("Error sending email:", error.message);
+        res.status(500).json({ message: "Failed to send OTP", error: error.message });
+    }
+
+
+}
+
+const CheckEmail=(req,res)=>{
+
+     const {recipitent_email} = req.body;
+    if (!recipitent_email) {
+        return res.status(400).json({ message: "Email are required." });
+    }
+
+    const query = 'SELECT * FROM login WHERE EMAIL = ?';
+
+    db.query(query, [recipitent_email], (error, results) => {
+        if (error) {
+            return res.status(500).json({ message: "Database query failed", error: error.message });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "User not found!" });
+        }
+
+        res.status(200).json({
+            message: "Email Exist",
+        });
+    });
+}
+
+const ResetPassword=(req,res)=>{
+     const {email,newPassword } = req.body;
+
+    if (!email || !newPassword) {
+        return res.status(400).json({ message: "Email and new password are required." });
+    }
+
+    const query = 'UPDATE login SET PASSWORD = ? WHERE EMAIL = ?';
+
+    db.query(query, [newPassword, email], (error, result) => {
+        if (error) {
+            return res.status(500).json({ message: "Failed to update password", error: error.message });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "No user found with the given email." });
+        }
+
+        res.status(200).json({ message: "Password updated successfully" });
+    });
+
+}
+export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets,UpdateAssets,Login,sendEmail,CheckEmail,ResetPassword };

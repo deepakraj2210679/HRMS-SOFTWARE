@@ -12,7 +12,7 @@ const Employees = () => {
 
   
   const getDetials = async () => {
-    const res = await axios.get("https://hrms-software.onrender.com/getEmployee")
+    const res = await axios.get("http://localhost:3000/getEmployee")
     setuser(res.data)
   }
 
@@ -53,9 +53,10 @@ const Popup1 = ({user}) => {
     ADDRESS: user.ADDRESS || "",
     CTC: user.CTC || "",
     DEPARTMENT: user.DEPARTMENT || "",
+    LOCATION:user.LOCATION || "",
     DATE_OF_INTERVIEW: user.DATE_OF_INTERVIEW ?.split("T")[0] || "",
     GENDER: user.GENDER || "",
-    EMPLOYEE_ACTIVE_STATUS: user.EMPLOYEE_ACTIVE_STATUS || "",
+    EMPLOYEE_ACTIVE_STATUS: user.EMPLOYEE_ACTIVE_STATUS,
     DOCUMENTS_STATUS: user.DOCUMENTS_STATUS || "",
     ASSET_STATUS: user.ASSET_STATUS || "",
     BLOOD_GROUP: user.BLOOD_GROUP || "",
@@ -81,7 +82,7 @@ const [formData,setFormData]=useState(tempalete)
       }
  
   const submitHandaler=async()=>{
-        await axios.post("https://hrms-software.onrender.com/updateEmployee",formData)
+        await axios.post("http://localhost:3000/updateEmployee",formData)
         .then((res)=>{
   
             toast.success(res.data.message,{position:'top-right',duration: 5000})
@@ -89,7 +90,6 @@ const [formData,setFormData]=useState(tempalete)
             setOpenPopup1(false);
         })
         .catch((error)=>{
-  
             toast.error(error.response?.data?.message||"some thing went wrong",{position:'top-right',duration: 5000})
         })
   }
@@ -165,6 +165,10 @@ const [formData,setFormData]=useState(tempalete)
             <label>
               Department<span className='text-red-500 '> *</span>
               <input name="DEPARTMENT" value={formData.DEPARTMENT} required onChange={handleChange} className="border mt-2 font-medium p-2 rounded w-full" />
+            </label>
+             <label>
+              Job Location<span className='text-red-500 '> *</span>
+              <input name="LOCATION" value={formData.LOCATION} required onChange={handleChange} className="border mt-2 font-medium p-2 rounded w-full" />
             </label>
             <label>
               Date of Birth<span className='text-red-500 '> *</span>
@@ -302,6 +306,9 @@ const [formData,setFormData]=useState(tempalete)
                     DOJ
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
+                    Job Location
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
                     Document Status
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-bold text-yellow-900 uppercase tracking-wider border-r border-yellow-500">
@@ -333,6 +340,9 @@ const [formData,setFormData]=useState(tempalete)
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
                       {employee.DATE_OF_JOINING?.split("T")[0]}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
+                      {employee.LOCATION}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
                       <span className={`px-2 py-1 text-xs rounded-full ${

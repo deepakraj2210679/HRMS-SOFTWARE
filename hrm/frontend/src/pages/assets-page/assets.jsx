@@ -14,7 +14,7 @@ const Asset=()=>{
   
 
   const getDetials = async () => {
-    const res = await axios.get("https://hrms-software.onrender.com/getAssets")
+    const res = await axios.get("http://localhost:3000/getAssets")
     setuser(res.data)
     }
     useEffect(() => {

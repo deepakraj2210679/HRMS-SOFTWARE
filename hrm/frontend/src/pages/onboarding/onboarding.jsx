@@ -11,7 +11,7 @@ const Onboarding = () => {
   const [ID,setID]=useState(0);
 
   const getDetials = async () => {
-    const res = await axios.get("https://hrms-software.onrender.com/getUsers")
+    const res = await axios.get("http://localhost:3000/getUsers")
     setuser(res.data)
   }
 
@@ -37,7 +37,7 @@ const Popup1 = ({user}) => {
     }
     else
     {
-        const Eid=await axios.get(`https://hrms-software.onrender.com/getuser/${formData.EMPLOYEE_ID}`);
+        const Eid=await axios.get(`http://localhost:3000/getuser/${formData.EMPLOYEE_ID}`);
         if (Eid.data.message != "found") 
         {
           setErrorMessage(`✅ ${formData.EMPLOYEE_ID} does not exist. You can proceed.`);
@@ -66,9 +66,10 @@ const Popup1 = ({user}) => {
     ADDRESS: user.ADDRESS || "",
     CTC: user.CTC || "",
     DEPARTMENT: user.DEPARTMENT || "",
+    LOCATION:user.LOCATION || "",
     DATE_OF_INTERVIEW: user.DOI?.split("T")[0] || "",
     GENDER: user.GENDER || "",
-    EMPLOYEE_ACTIVE_STATUS: user.EMPLOYEE_ACTIVE_STATUS || "",
+    EMPLOYEE_ACTIVE_STATUS: !!user.EMPLOYEE_ACTIVE_STATUS ?? 0,
     DOCUMENTS_STATUS: user.DOCUMENTS_STATUS || "",
     ASSET_STATUS: user.ASSET_STATUS || "",
     BLOOD_GROUP: user.BLOOD_GROUP || "",
@@ -85,8 +86,9 @@ const Popup1 = ({user}) => {
 const [formData,setFormData]=useState(tempalete)
 
   
-  const deleteUser=()=>{
-    axios.delete(`https://hrms-software.onrender.com/deleteInterview/${ID}`);
+  const deleteUser=async()=>{
+    await axios.delete(`http://localhost:3000/deleteInterview/${ID}`);
+    await axios.post()
     getDetials(); 
   }
  
@@ -98,14 +100,17 @@ const [formData,setFormData]=useState(tempalete)
       }
  
   const submitHandaler=async()=>{
-          setFormData({...formData,EMPLOYEE_ACTIVE_STATUS: true});
-        await axios.post("https://hrms-software.onrender.com/createEmployee",formData)
+        const updatedForm = { ...formData, EMPLOYEE_ACTIVE_STATUS: 1 };
+        setFormData(updatedForm);  // (optional)
+        await axios.post("http://localhost:3000/createEmployee", updatedForm)
+
         .then((res)=>{
   
             toast.success(res.data.message,{position:'top-right',duration: 5000})
             deleteUser();
             getDetials();
             setOpenPopup1(false);
+            
         })
         .catch((error)=>{
   
@@ -202,6 +207,10 @@ const [formData,setFormData]=useState(tempalete)
               <input name="DEPARTMENT" value={formData.DEPARTMENT} required onChange={handleChange} className="border mt-2 p-2 rounded w-full" />
             </label>
             <label>
+              Job Location
+              <input name="LOCATION" value={formData.LOCATION} onChange={handleChange} className="border mt-2 p-2 rounded w-full" />
+            </label>
+            <label>
               Date of Birth<span className='text-red-500 '> *</span>
               <input name="DATE_OF_BIRTH" value={formData.DATE_OF_BIRTH} required onChange={handleChange} className="border mt-2 p-2 rounded w-full" type="date" />
             </label>
@@ -219,9 +228,20 @@ const [formData,setFormData]=useState(tempalete)
                   <option value="Other">Other</option>
                 </select>
               </label>
-            <label>
-              Married Status
-              <input name="MARRIED_STATUS" value={formData.MARRIED_STATUS} onChange={handleChange} className="border mt-2 p-2 rounded w-full" />
+            
+            <label>Married Status<span className='text-red-500 '> *</span>
+            <select
+                  name="MARRIED_STATUS"
+                  value={formData.MARRIED_STATUS}
+                  onChange={handleChange}
+                  required
+                  className="border p-2 mt-2 rounded w-full"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+          
+                </select>
             </label>
             <label>
               Blood Group
@@ -354,7 +374,7 @@ const [formData,setFormData]=useState(tempalete)
                           setSelectedUser(x);
                           setID(x.ID);
                         }}
-                        className="text-blue-600 hover:text-blue-800 font-medium text-sm px-3 py-1 rounded-md hover:bg-blue-50 transition-colors"
+                        className="text-blue-600 hover:text-blue-800 font-medium text-sm px-3 py-1 rounded-md hover:bg-blue-50 transition-colors cursor-pointer"
                       >
                         View
                       </button>

@@ -11,8 +11,10 @@ import { Asset } from './pages/assets-page/assets.jsx'
 import AdminLayout from './layout/AdminLayout';
 import { Interview } from './pages/interview/intervies.jsx'
 import { PrivateRoute } from './layout/Private.jsx'
-import { LoginPage } from './layout/AdminLogin.jsx'
-import { ForgetPassword } from './layout/ForgetPassword.jsx'
+import { LoginPage } from './auth/AdminLogin.jsx'
+import { EnterEmailPage} from './auth/email.jsx'
+import { EmailVerificationPage } from './auth/emialVerification.jsx'
+import { ForgetPassword } from './auth/ForgetPassword.jsx' 
 
 
 
@@ -22,7 +24,9 @@ function App() {
   return (
   <Routes>
     <Route index path='/' element={<LoginPage/>} />
-    <Route path='/ForgetPassword' element={<ForgetPassword />}/>
+    <Route path='/Email' element={<EnterEmailPage/>}/>
+    <Route path='/forgetPassword' element={<ForgetPassword />}/>
+    <Route path='/verification' element={<EmailVerificationPage/>}/>
     <Route element={<PrivateRoute/>}>
       <Route  element={ <AdminLayout />}>
         <Route path='/dashboard' element={<Dashboard />}/>

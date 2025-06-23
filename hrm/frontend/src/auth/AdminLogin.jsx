@@ -1,34 +1,28 @@
 import {useState} from 'react'
 import { useNavigate } from "react-router-dom"
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import logo from '../assets/logo.png';
+
+import { useAuth } from './authProvider';
 import logo1 from '../assets/nouuu.png';
 const LoginPage=()=>{
 
-
-const Navigate=useNavigate();
+    
+    const Navigate=useNavigate();
     const [email,setemail]=useState("");
     const[password,setpassword]=useState("");
-    
-   
+
+    const {loginAction}=useAuth()
 
 
 const actionSubmit=async(e)=>{
     e.preventDefault()
+    e.preventDefault()
+    const data={
+        email,
+        password
+    }
+    loginAction(data);
 
-        const res=await axios.post("https://hrms-software.onrender.com/Login",{email,password})
-        .then((res)=>{
-            localStorage.setItem("authToken",res.data.token)
-            toast.success(res.data.message,{ position: 'top-right', duration: 5000 });
-            Navigate("/dashboard")
-        })
-        .catch((error)=>{
-  
-            toast.error(error.response?.data?.message||"Login failed. Please try again" ,{ position: 'top-right', duration: 5000 }
-);
-        })
-        
+       
 }
 
  return (
@@ -58,7 +52,7 @@ const actionSubmit=async(e)=>{
             />
           </div>
           <div className="text-right">
-            <a href="/ForgetPassword" className="text-sm text-yellow-600 hover:underline">
+            <a href="/Email" className="text-sm text-yellow-600 hover:underline">
               Forgot Password?
             </a>
           </div>
