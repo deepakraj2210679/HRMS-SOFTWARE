@@ -13,7 +13,7 @@ import { Interview } from './pages/interview/intervies.jsx'
 import { PrivateRoute } from './layout/Private.jsx'
 import { LoginPage } from './layout/AdminLogin.jsx'
 import { ForgetPassword } from './layout/ForgetPassword.jsx'
-import { LogoutAction } from './layout/Logout.jsx'
+
 
 
 function App() {
@@ -23,7 +23,6 @@ function App() {
   <Routes>
     <Route index path='/' element={<LoginPage/>} />
     <Route path='/ForgetPassword' element={<ForgetPassword />}/>
-    <Route path='/logout' element={<LogoutAction />}/>
     <Route element={<PrivateRoute/>}>
       <Route  element={ <AdminLayout />}>
         <Route path='/dashboard' element={<Dashboard />}/>

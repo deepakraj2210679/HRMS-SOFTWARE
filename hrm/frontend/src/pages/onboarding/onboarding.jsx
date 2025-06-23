@@ -109,7 +109,7 @@ const [formData,setFormData]=useState(tempalete)
         })
         .catch((error)=>{
   
-            toast.error("some thing went wrong",{position:'top-right',duration: 5000})
+            toast.error(error.response?.data?.message||"some thing went wrong",{position:'top-right',duration: 5000})
         })
   }
 

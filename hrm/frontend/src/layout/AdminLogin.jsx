@@ -20,6 +20,7 @@ const actionSubmit=async(e)=>{
         const res=await axios.post("https://hrms-software.onrender.com/Login",{email,password})
         .then((res)=>{
             localStorage.setItem("authToken",res.data.token)
+            toast.success(res.data.message,{ position: 'top-right', duration: 5000 });
             Navigate("/dashboard")
         })
         .catch((error)=>{

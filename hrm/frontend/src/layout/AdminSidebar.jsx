@@ -62,7 +62,7 @@ const AdminSidebar = () => {
        <div style={{ marginTop: 'auto', padding: '20px' }}>
   <div
     className="flex items-center gap-2 bg-gray-50 hover:bg-gray-200 text-gray-600 hover:text-gary-600 pl-2  py-2 rounded-xl cursor-pointer transition-all duration-200"
-    onClick={() => navigate('/logout')}
+    onClick={() => navigate('/')}
   >
     <img src={LogoutIcon} width={24} className="pl-1" alt="Logout Icon" />
     <span className="text-md font-medium">Logout</span>
