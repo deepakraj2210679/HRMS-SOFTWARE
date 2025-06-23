@@ -10,7 +10,7 @@ const LoginPage=()=>{
 const Navigate=useNavigate();
     const [email,setemail]=useState("");
     const[password,setpassword]=useState("");
-    const [token,settoken]=useState(localStorage.getItem("authToken")  || null);
+    
    
 
 
@@ -19,7 +19,6 @@ const actionSubmit=async(e)=>{
 
         const res=await axios.post("https://hrms-software.onrender.com/Login",{email,password})
         .then((res)=>{
-           settoken(res.data.token)
             localStorage.setItem("authToken",res.data.token)
             Navigate("/dashboard")
         })
@@ -58,7 +57,7 @@ const actionSubmit=async(e)=>{
             />
           </div>
           <div className="text-right">
-            <a href="#" className="text-sm text-yellow-600 hover:underline">
+            <a href="/ForgetPassword" className="text-sm text-yellow-600 hover:underline">
               Forgot Password?
             </a>
           </div>
