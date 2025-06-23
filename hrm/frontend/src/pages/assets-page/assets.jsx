@@ -174,10 +174,10 @@ const Asset=()=>{
                 setFormData({ ...formData,LAPTOP_STATUS: updatedStatus });
               }}
             />
-            <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-all duration-300"></div>
+            <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
             <div className="absolute left-[3px] top-[3px] w-3.5 h-3.5 bg-white rounded-full peer-checked:translate-x-5 transform transition-all duration-300"></div>
           </label>
-          <span className={`text-sm font-semibold ${formData.LAPTOP_STATUS ? 'text-green-600' : 'text-gray-400'}`}>
+          <span className={`text-sm font-semibold ${formData.LAPTOP_STATUS ? 'text-blue-600' : 'text-gray-400'}`}>
             {formData.LAPTOP_STATUS ? 'Applicable' : 'Not Applicable'}
           </span>
         </div>
