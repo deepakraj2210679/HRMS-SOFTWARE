@@ -51,10 +51,10 @@ const actionSubmit=async(e)=>{
               className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
           </div>
-          <div className="text-right">
-            <a href="/Email" className="text-sm text-yellow-600 hover:underline">
+          <div className="text-right" onClick={()=>{Navigate("/Email")}}>
+            <button  className="text-sm text-yellow-600 hover:underline">
               Forgot Password?
-            </a>
+            </button>
           </div>
           <button
             type="submit"
