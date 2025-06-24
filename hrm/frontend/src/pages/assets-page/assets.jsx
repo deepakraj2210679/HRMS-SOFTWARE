@@ -11,10 +11,13 @@ const Asset=()=>{
   const [openPopup1,setOpenPopup1]=useState(false)
   const [selectedUser,setSelectedUser]=useState(null)
 
+  const [search,setSearch]=useState("")
+  const [filter,setFilter]=useState("NAME")
+
   
 
   const getDetials = async () => {
-    const res = await axios.get("http://localhost:3000/getAssets")
+    const res = await axios.get("https://hrms-software.onrender.com/getAssets")
     setuser(res.data)
     }
     useEffect(() => {
@@ -335,6 +338,28 @@ const Asset=()=>{
       {/* Main Content with Yellow Table */}
       <div className="flex-1 p-7 pl-10 overflow-hidden bg-gray-50">
         <h1 className="text-3xl font-bold text-blue-800 mb-6">Assets List</h1>
+
+        <div className="flex flex-row gap-6 mb-6 w-1/2">
+        <input
+            type="text"
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={"Search by " + filter.toLowerCase()}
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white text-gray-700 placeholder-gray-400"
+          />
+        <select
+          onChange={(e) => setFilter(e.target.value)}
+          className="ml-auto w-56 px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white text-gray-700"
+        >
+          <option value="" hidden>Filter by</option>
+          <option value="NAME">Name</option>
+          <option value="EMPLOYEE_ID">Employee ID</option>
+          <option value="PERFORMANCE_KEY">Performance Key</option>
+          <option value="DESIGNATION">Designation</option>
+          <option value="DEPARTMENT">Department</option>
+          <option value="LOCATION">Job Location</option>
+        </select>
+      </div>
+
         {/* Yellow-themed Table */}
          <div className="bg-white rounded-lg  border-gray-50 overflow-hidden">
           <div className="overflow-x-auto">
@@ -378,8 +403,9 @@ const Asset=()=>{
               </thead>
               <tbody className="bg-white divide-y  divide-gray-300 ">
               
-                 {Array.isArray(user) && user.length > 0 ? (
-                user.map((x, index) => (
+                 {Array.isArray(user) && user.length>0 ? (
+                  user.filter((x)=>{return search==="" ? x:(x[filter].toLowerCase().replace(/\s/g, "")).includes(search.toLowerCase().replace(/\s/g, ""))
+                  }).map((x, index) => (
                   <tr key={index} className="hover:bg-blue-50 transition-colors">
                     <td className="px-4 py-3 whitespace-nowrap text-sm  text-gray-800 border-r border-gray-200">
                       {x.PERFORMANCE_KEY }

@@ -2,11 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "./authProvider";
 import { useState,useEffect } from "react";
 import toast from "react-hot-toast"
+import axios from "axios";
 
 const EmailVerificationPage = () => {
   const { email, setEmail, setOTP, otp } = useAuth();
   const [OTPinput, setOTPinput] = useState([0, 0, 0, 0]);
-  const [timeCount,setTimer]=useState(10);
+  const [timeCount,setTimer]=useState(30);
   const [disable,setDisable]=useState(true)
 
   const navigate = useNavigate();
@@ -25,8 +26,7 @@ const EmailVerificationPage = () => {
 
   const sendOTP=async()=>{
     try {
-      console.log(otp,email)
-      const res = await axios.post("http://localhost:3000/sendOTP", {OTP:otp,recipitent_email:email});
+      const res = await axios.post("https://hrms-software.onrender.com/sendOTP", {OTP:otp,recipitent_email:email});
       toast.success(res.data.message, { position: "top-right", duration: 5000 });
        setTimer(60);
        setDisable(true);
@@ -61,8 +61,8 @@ const EmailVerificationPage = () => {
         <h2 className="text-2xl font-semibold text-center text-yellow-600 mb-4">
           Email Verification
         </h2>
-        <p className="text-sm text-gray-600 text-center mb-4">
-          We have sent a code to your email <span className="font-medium">email123@gmail.com</span>
+        <p className="text-sm text-gray-600 text-center mb-4 ">
+          We have sent a code to your email <span className="font-medium">{localStorage.getItem("resetEmail")}<button onClick={()=>{navigate("/Email")}} class='text-yellow-400 cursor-pointer pl-2'>✏️</button></span>
         </p>
         <div className="flex justify-center gap-2 mb-6">
           <input

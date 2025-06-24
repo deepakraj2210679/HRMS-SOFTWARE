@@ -28,7 +28,7 @@ const UpdateDocuments=()=>{
           alert(`Selected "${file.name}" for ${key}`);
 
           const updatedData = { EMPLOYEE_ID: ID, field: col };
-          axios.post("http://localhost:3000/UpdateDocStatus", updatedData).then((res) => {
+          axios.post("https://hrms-software.onrender.com/UpdateDocStatus", updatedData).then((res) => {
             console.log(res);
             getDetials();
           });

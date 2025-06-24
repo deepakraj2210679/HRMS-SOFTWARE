@@ -1,5 +1,3 @@
-
-import { Link } from 'react-router-dom'
 import { useState, useEffect } from "react"
 import axios from "axios"
 import toast from "react-hot-toast"
@@ -10,8 +8,14 @@ const Onboarding = () => {
   const [selectedUser, setSelectedUser] = useState(null)
   const [ID,setID]=useState(0);
 
+  const [search,setSearch]=useState("")
+  const [filter,setFilter]=useState("NAME")
+  const [fromDate,setFromDate]=useState("")
+  const [toDate,setToDate]=useState("")
+
+
   const getDetials = async () => {
-    const res = await axios.get("http://localhost:3000/getUsers")
+    const res = await axios.get("https://hrms-software.onrender.com/getUsers")
     setuser(res.data)
   }
 
@@ -37,7 +41,7 @@ const Popup1 = ({user}) => {
     }
     else
     {
-        const Eid=await axios.get(`http://localhost:3000/getuser/${formData.EMPLOYEE_ID}`);
+        const Eid=await axios.get(`https://hrms-software.onrender.com/getuser/${formData.EMPLOYEE_ID}`);
         if (Eid.data.message != "found") 
         {
           setErrorMessage(`✅ ${formData.EMPLOYEE_ID} does not exist. You can proceed.`);
@@ -87,7 +91,7 @@ const [formData,setFormData]=useState(tempalete)
 
   
   const deleteUser=async()=>{
-    await axios.delete(`http://localhost:3000/deleteInterview/${ID}`);
+    await axios.delete(`https://hrms-software.onrender.com/deleteInterview/${ID}`);
     await axios.post()
     getDetials(); 
   }
@@ -102,7 +106,7 @@ const [formData,setFormData]=useState(tempalete)
   const submitHandaler=async()=>{
         const updatedForm = { ...formData, EMPLOYEE_ACTIVE_STATUS: 1 };
         setFormData(updatedForm);  // (optional)
-        await axios.post("http://localhost:3000/createEmployee", updatedForm)
+        await axios.post("https://hrms-software.onrender.com/createEmployee", updatedForm)
 
         .then((res)=>{
   
@@ -312,11 +316,53 @@ const [formData,setFormData]=useState(tempalete)
   return (
   <div className="flex h-screen">
     {/* Sidebar (unchanged) */}
-   
+
     {/* Main Content */}
     <div className="flex-1 p-7 pl-10 overflow-hidden bg-gray-50">
       <h1 className="text-3xl font-bold text-blue-800 mb-6">Onboarding List</h1>
-      
+
+      {/* Tailwind-only Search Bar */}
+    <div className="flex flex-row gap-6 mb-6 w-1/2">
+        {(filter != "DOI" && filter != "DOJ") && (
+          <input
+            type="text"
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={"Search by " + filter.toLowerCase()}
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white text-gray-700 placeholder-gray-400"
+          />
+        )}
+
+        {(filter=="DOI" || filter=="DOJ") && (
+          <>
+            <input
+              type="date"
+              onChange={(e) => setFromDate(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white text-gray-700"
+            />
+            <p className="mt-2">to</p>
+            <input
+              type="date"
+              onChange={(e) => setToDate(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white text-gray-700"
+            />
+          </>
+        )}
+
+        <select
+          onChange={(e) => setFilter(e.target.value)}
+          className="ml-auto w-56 px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white text-gray-700"
+        >
+          <option value="" hidden>Filter by</option>
+          <option value="NAME">Name</option>
+          <option value="DESIGNATION">Designation</option>
+          <option value="DEPARTMENT">Department</option>
+          <option value="PHONE_NUMBER">Phone Number</option>
+          <option value="DOI">Date of Interview</option>
+          <option value="DOJ">Date of Joining</option>
+        </select>
+      </div>
+
+
       <div className="bg-white rounded-lg border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full border rounded-xl border-gray-300">
@@ -347,9 +393,22 @@ const [formData,setFormData]=useState(tempalete)
             </thead>
             <tbody className="bg-white divide-y divide-gray-300">
               {Array.isArray(user) && user.length > 0 ? (
-                user.map((x, index) => (
+                user.filter((x)=>{
+                  if(filter!="DOJ" && filter!="DOI")
+                  {
+                      return search==="" ? x:(x[filter].toLowerCase().replace(/\s/g, "")).includes(search.toLowerCase().replace(/\s/g, ""))
+                  }
+                  else
+                  {
+                    if (!fromDate || !toDate) return x; // If date not selected, don't filter
+                      const targetDate = new Date(x[filter]);
+                      const from = new Date(fromDate);
+                      const to = new Date(toDate);
+                      return targetDate >= from && targetDate <= to;
+                  }
+                }).map((x, index) => (
                   <tr key={index} className="hover:bg-blue-50 transition-colors">
-                    <td className="px-4 py-3 whitespace-nowrap text-sm  text-gray-800 border-r border-gray-200">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
                       {x.NAME || '-'}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
@@ -402,6 +461,7 @@ const [formData,setFormData]=useState(tempalete)
     </div>
   </div>
 );
+
 
 }
 
