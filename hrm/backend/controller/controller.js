@@ -511,4 +511,4 @@ const ResetPassword=(req,res)=>{
 }
 
 
-export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets,UpdateAssets,Login,sendEmail,CheckEmail,ResetPassword,AddAssets };
+export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets,UpdateAssets,Login,sendEmail,CheckEmail,ResetPassword };
