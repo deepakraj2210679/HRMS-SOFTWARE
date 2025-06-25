@@ -335,7 +335,7 @@ const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
         onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
         className="px-2 py-1 border text-sm hover:bg-gray-100 rounded border-gray-500"
       >
-        ◀
+        ᐊ
       </button>
 
       {/* Page Numbers */}
@@ -356,7 +356,7 @@ const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
         onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
         className="px-2 py-1 border border-gray-600 text-sm hover:bg-gray-100 rounded"
       >
-        ▶
+        ᐅ
       </button>
     </div>
   );

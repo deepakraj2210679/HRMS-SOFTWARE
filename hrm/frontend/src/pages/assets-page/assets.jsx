@@ -89,6 +89,32 @@ const Asset=()=>{
         })
   }
 
+  const handleStatus = async (EMPLOYEE_ID) => {
+  if (!EMPLOYEE_ID ) {
+    toast.error("Missing or invalid EMPLOYEE_ID or status value");
+    return;
+  }
+
+  try {
+    const res = await axios.post("https://hrms-software.onrender.com/udassets", {
+      EMPLOYEE_ID
+    });
+
+    if (res.data.message) {
+      toast.success(res.data.message);
+    } else {
+      toast.error("Unexpected response");
+    }
+
+    // Optional: Refresh employee list
+    // await getEmployeeList();
+  } catch (error) {
+    console.error("Failed to update asset status:", error);
+    toast.error("Asset status update failed");
+  }
+};
+
+
   return (
     <div className="fixed inset-0 bg-black/10 backdrop-blur-xs flex justify-center items-center ">
       <div className="bg-white rounded-lg shadow-xl w-[700px] p-9 overflow-auto max-h-[90vh]">
@@ -319,6 +345,7 @@ const Asset=()=>{
         >Cancel
         </button>
         <button
+            onClick={()=>{handleStatus(formData.EMPLOYEE_ID)}}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" type="submit" >
         Update
         </button>
@@ -373,7 +400,7 @@ const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
         onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
         className="px-2 py-1 border text-sm hover:bg-gray-100 rounded border-gray-500"
       >
-        ◀
+        ᐊ
       </button>
 
       {/* Page Numbers */}
@@ -394,7 +421,7 @@ const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
         onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
         className="px-2 py-1 border border-gray-600 text-sm hover:bg-gray-100 rounded"
       >
-        ▶
+        ᐅ
       </button>
     </div>
   );
@@ -536,10 +563,10 @@ const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
           </div>
         </div>
          <Pagination
-  currentPage={currentPage}
-  totalPages={Math.ceil(filteredUsers.length / itemPerPage)}
-  setCurrentPage={setCurrentPage}
-/>
+          currentPage={currentPage}
+          totalPages={Math.ceil(filteredUsers.length / itemPerPage)}
+          setCurrentPage={setCurrentPage}
+        />
        {openPopup1 && <Popup1 user={selectedUser} />}
       </div>
     </div>

@@ -1,6 +1,7 @@
 import db from '../index.js';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
+import { v2 as cloudinary } from 'cloudinary';
 
 const getInterviewList=(req,res)=>{
     const query = 'SELECT * FROM interview_list';
@@ -511,4 +512,56 @@ const ResetPassword=(req,res)=>{
 }
 
 
-export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets,UpdateAssets,Login,sendEmail,CheckEmail,ResetPassword };
+
+cloudinary.config({
+  cloud_name: 'dgdnub8dv',
+  api_key: '963529246183818',
+  api_secret: '1hetzCVXBdGpiDSBhmqemhFnaew'
+});
+
+
+const Cloudinary = (req, res) => {
+  const { folder, public_id } = req.body;
+
+  const timestamp = Math.floor(Date.now() / 1000);
+  const signature = cloudinary.utils.api_sign_request(
+    {
+      timestamp: timestamp,
+      folder: folder,
+      public_id: public_id
+    },
+    cloudinary.config().api_secret
+  );
+
+  res.json({
+    cloudName: cloudinary.config().cloud_name,
+    apiKey: cloudinary.config().api_key,
+    timestamp: timestamp,
+    signature: signature
+  });
+};
+
+
+const UpdateAssetsStatus = (req, res) => {
+    const { EMPLOYEE_ID } = req.body;
+
+    if (!EMPLOYEE_ID) {
+        return res.status(400).json({ message: "EMPLOYEE_ID is required." });
+    }
+
+    const query = 'UPDATE employees SET ASSET_STATUS = 1 WHERE EMPLOYEE_ID = ?';
+
+    db.query(query, [EMPLOYEE_ID], (error, result) => {
+        if (error) {
+            return res.status(500).json({ message: "Failed to update asset status", error: error.message });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "No employee found with the given EMPLOYEE_ID." });
+        }
+
+        res.status(200).json({ message: "Asset status updated successfully." });
+    });
+};
+
+export { updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets,UpdateAssets,Login,sendEmail,CheckEmail,ResetPassword,Cloudinary,UpdateAssetsStatus };

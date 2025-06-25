@@ -1,5 +1,5 @@
 import express from 'express'
-import {updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets, UpdateAssets, Login, sendEmail, CheckEmail, ResetPassword} from '../controller/controller.js'
+import {updateList,getInterviewList,getuserById,AddEmployee,DeleteInterview,GetEmployee,getDocDetial,DocStatusUpdate,GetAssets, UpdateAssets, Login, sendEmail, CheckEmail, ResetPassword, Cloudinary, UpdateAssetsStatus} from '../controller/controller.js'
 
 
 const route=express.Router()
@@ -18,6 +18,10 @@ route.post("/login",Login)
 route.post("/sendOTP",sendEmail)
 route.post("/CheckMail",CheckEmail)
 route.post("/ResetPass",ResetPassword)
+route.post("/cloudinary-signature", Cloudinary);
+route.post("/udassets",UpdateAssetsStatus)
+
+
 
 
 export default route

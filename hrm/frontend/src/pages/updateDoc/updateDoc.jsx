@@ -10,6 +10,7 @@ const UpdateDocuments=()=>{
     const fileInputRefs = useRef({}); // to track file inputs per row
     const [selectedFiles, setSelectedFiles] = useState({});
     const [openPopup1,setOpenPopup1]=useState(false)
+    
 
     const getDetials = async () => {
     const res = await axios.get("https://hrms-software.onrender.com/document")
@@ -28,7 +29,7 @@ const UpdateDocuments=()=>{
           alert(`Selected "${file.name}" for ${key}`);
 
           const updatedData = { EMPLOYEE_ID: ID, field: col };
-          axios.post("https://hrms-software.onrender.com/UpdateDocStatus", updatedData).then((res) => {
+          axios.post("http://localhost:3000/UpdateDocStatus", updatedData).then((res) => {
             console.log(res);
             getDetials();
           });
@@ -42,45 +43,166 @@ const UpdateDocuments=()=>{
       }
     };
 
+
+    const Popup1 = ({user}) => {
+     const tempalete = {
+        EMPLOYEE_ID: user.EMPLOYEE_ID || "",
+        PERFORMANCE_KEY: user.PERFORMANCE_KEY || "",
+        NAME: user.NAME || "",
+        DESIGNATION: user.DESIGNATION || "",
+        DEPARTMENT: user.DEPARTMENT || "",
+        LOCATION: user.LOCATION || "",
+
+        LAPTOP_STATUS: !! user.LAPTOP_STATUS,     
+        LAPTOP_BRAND: user.LAPTOP_BRAND || "",       
+        LAPTOP_MODEL: user.LAPTOP_MODEL || "",      
+        LAPTOP_SERIAL_NUMBER: user.LAPTOP_SERIAL_NUMBER || "",
+        LAPTOP_CHARGER: user.LAPTOP_CHARGER || "",
+        MOUSE: user.MOUSE || "",       
+
+        MOBILE_STATUS: !!user.MOBILE_STATUS,     
+        MOBILE_BRAND: user.MOBILE_BRAND || "",     
+        MOBILE_MODEL: user.MOBILE_MODEL || "",     
+        MOBILE_IMEI_NUMBER1: user.MOBILE_IMEI_NUMBER1 || "",
+        MOBILE_IMEI_NUMBER2: user.MOBILE_IMEI_NUMBER2 || "",
+        MOBILE_CHARGER: user.MOBILE_CHARGER || "",   
+
+        CUG_NUMBER: user.CUG_NUMBER || "",     
+        HEADSET_STATUS: !!user.HEADSET_STATUS,  
+        HEADSET: user.HEADSET || "" 
+      };
+
+      
+
+      const [formData,setFormData]=useState(tempalete)
+
+  
+      const toBoolean = (value) => {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'string') return value.toLowerCase() === 'true';
+  return false;
+};
+
+// Then use it like:
+
+  
+ 
+  const handleChange=(a)=>{
+
+          const {name,value}=a.target;
+          setFormData({...formData,[name]:value})
+      }
+ 
+  const submitHandaler=async(req,res)=>{          
+        await axios.post("http://localhost:3000/UpdateAsset",formData)
+
+        .then((res)=>{
+           
+            toast.success(res.data.message,{position:'top-right',duration: 5000})
+            getDetials();
+            setOpenPopup1(false);
+        })
+        .catch((error)=>{
+  
+            toast.error(error.response?.data?.message||"some thing went wrong",{position:'top-right',duration: 5000})
+        })
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/10 backdrop-blur-xs flex justify-center items-center ">
+      <div className="bg-white rounded-lg shadow-xl w-[700px] p-9 overflow-auto max-h-[90vh]">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-blue-800">Assets Details</h2>
+          <button onClick={()=>setOpenPopup1(false)}  className="text-blue-700 hover:bg-green-50">❎</button>
+          </div>
+          <form onSubmit={(e) => {
+            e.preventDefault();  // Prevents the default form submit (page reload)
+            submitHandaler();
+          }}>
+        {/* Section 2: User Details */}
+       <div>
+        <h3 className="text-lg font-semibold text-yellow-400 mb-3 pt-8">1. Employee Details</h3>
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <label>
+            Performance Key
+            <input 
+              name="PERFORMANCE_KEY" 
+              value={formData.PERFORMANCE_KEY} 
+              readOnly 
+              className="border mt-2 p-2 rounded w-full  bg-gray-100 cursor-not-allowed" 
+            />
+          </label>
+          <label>
+            Employee ID
+            <input 
+              name="EMPLOYEE_ID" 
+              value={formData.EMPLOYEE_ID} 
+              readOnly 
+              className="border mt-2 p-2 rounded w-full bg-gray-100 cursor-not-allowed" 
+            />
+          </label>
+          <label>
+            Name
+            <input 
+              name="NAME" 
+              value={formData.NAME} 
+              readOnly 
+              className="border p-2 mt-2 rounded w-full bg-gray-100 cursor-not-allowed" 
+            />
+          </label>
+          <label>
+            Designation
+            <input 
+              name="DESIGNATION" 
+              value={formData.DESIGNATION} 
+              readOnly 
+              className="border mt-2 p-2 rounded w-full bg-gray-100 cursor-not-allowed" 
+            />
+          </label>
+          <label>
+            Department
+            <input 
+              name="DEPARTMENT" 
+              value={formData.DEPARTMENT} 
+              readOnly 
+              className="border mt-2 p-2 rounded w-full bg-gray-100 cursor-not-allowed" 
+            />
+          </label>
+          <label>
+            Location
+            <input 
+              name="LOCATION" 
+              value={formData.LOCATION} 
+              readOnly 
+              className="border mt-2 p-2 rounded w-full bg-gray-100 cursor-not-allowed" 
+            />
+          </label>
+        </div>
+      </div>
+
+
+      <div className="flex justify-end mt-6 gap-3 pt-8">
+        <button
+            onClick={()=>setOpenPopup1(false)}
+            className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
+        >Cancel
+        </button>
+        <button
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" type="submit" >
+        Update
+        </button>
+
+           </div>
+         </form>
+        </div>
+        </div>
+        )          
+    }
+
     
 
 return(
      <div className="flex h-screen">
-      {/* Original Blue Sidebar 
-      <div className="bg-blue-600 bg-gradient-to-b from-blue-600 to-blue-900 w-60">
-        <div className="flex flex-col pt-40">
-          <Link to="/">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pl-10 transition-all duration-200">
-              ☞ Dashboard
-            </button>
-          </Link>
-          <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pr-9 transition-all duration-200">
-            ☞ Interview List
-          </button>
-          <Link to="/onboarding">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200">
-              ☞ Onboarding List
-            </button>
-          </Link>
-          <Link to="/employees">
-            <button className="font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10">
-              ☞ Employee List
-            </button>
-          </Link>
-          <Link to={'/documents'}>
-            <button className='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10'>
-              <span className='text-'>☞</span> Documents
-            </button>
-          </Link>
-          <Link to={'/asset'}>
-            <button className='font-[serif] text-lg text-amber-200 hover:text-[19px] hover:font-semibold pt-3 pl-10 transition-all duration-200'>
-              ☞ Assets
-            </button>
-          </Link>
-        </div>
-      </div>
-      */}
-
       {/* Main Content with Yellow Table */}
       <div className="flex-1 p-7 pl-10 overflow-hidden bg-gray-50">
         <h1 className="text-3xl font-bold text-blue-800 mb-6">Update / View Documents</h1>
