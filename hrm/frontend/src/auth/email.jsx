@@ -57,7 +57,7 @@ const EnterEmailPage = () => {
             <input
               type="email"
               onChange={(e)=>setEmail(e.target.value)}
-              className="border border-gray-300 rounded-lg w-full p-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="border border-gray-300 rounded-lg w-full p-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 "
               placeholder="Enter your email"
             />
           </div>

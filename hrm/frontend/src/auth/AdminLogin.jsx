@@ -51,11 +51,16 @@ const actionSubmit=async(e)=>{
               className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
           </div>
-          <div className="text-right" onClick={()=>{Navigate("/Email")}}>
-            <button  className="text-sm text-yellow-600 hover:underline">
-              Forgot Password?
-            </button>
-          </div>
+          <div className="text-right">
+          <button
+            type="button"
+            className="text-sm text-yellow-600 hover:underline"
+            onClick={() => { Navigate("/Email"); }}
+          >
+            Forgot Password?
+          </button>
+        </div>
+
           <button
             type="submit"
             className="w-full px-4 py-2 text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 font-semibold"

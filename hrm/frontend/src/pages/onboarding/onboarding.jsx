@@ -312,6 +312,87 @@ const [formData,setFormData]=useState(tempalete)
   );
 };
 
+const filteredUsers=user.filter((x)=>{
+  if(filter!="DOJ" && filter!="DOI")
+  {
+    return search==="" ? x:(x[filter].toLowerCase().replace(/\s/g, "")).includes(search.toLowerCase().replace(/\s/g, ""))
+  }
+  else
+  {
+    if (!fromDate || !toDate) return x; // If date not selected, don't filter
+    const targetDate = new Date(x[filter]);
+    const from = new Date(fromDate);
+    const to = new Date(toDate);
+    return targetDate >= from && targetDate <= to;
+    }
+}
+)
+const [currentPage,setCurrentPage]=useState(1);
+  const [itemPerPage,setItemPerPage]=useState(7);
+
+  const lastItemIndex=currentPage*itemPerPage;
+  const firstItemIndex=lastItemIndex-itemPerPage;
+  const thisPageItems=filteredUsers.slice(firstItemIndex,lastItemIndex);
+
+  const pages=[]
+  for(let i = 1; i <= Math.ceil(filteredUsers.length / itemPerPage); i++) {
+  pages.push(i);
+}
+const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      if (currentPage <= 4) {
+        pageNumbers.push(1, 2, 3, 4, 5, "...", totalPages);
+      } else if (currentPage > totalPages - 4) {
+        pageNumbers.push(1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pageNumbers.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
+      }
+    }
+
+    return pageNumbers;
+  };
+
+  return (
+    <div className="flex justify-center mt-6 space-x-2">
+      {/* Prev Button */}
+      <button
+        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+        className="px-2 py-1 border text-sm hover:bg-gray-100 rounded border-gray-500"
+      >
+        ◀
+      </button>
+
+      {/* Page Numbers */}
+      {getPageNumbers().map((page, index) => (
+        <button
+          onClick={() =>setCurrentPage(page)}
+          disabled={page === "..."}
+          className={`px-2.5 py-1 border text-sm ${
+            currentPage === page ? 'bg-yellow-500 text-white border-yellow-500 rounded ' : 'text-gray-700 hover:bg-yellow-100 rounded border-gray-600'
+          } ${page === "..." ? 'cursor-default text-gray-400' : ''}`}
+        >
+          {page}
+        </button>
+      ))}
+
+      {/* Next Button */}
+      <button
+        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+        className="px-2 py-1 border border-gray-600 text-sm hover:bg-gray-100 rounded"
+      >
+        ▶
+      </button>
+    </div>
+  );
+};
+
 
   return (
   <div className="flex h-screen">
@@ -393,20 +474,7 @@ const [formData,setFormData]=useState(tempalete)
             </thead>
             <tbody className="bg-white divide-y divide-gray-300">
               {Array.isArray(user) && user.length > 0 ? (
-                user.filter((x)=>{
-                  if(filter!="DOJ" && filter!="DOI")
-                  {
-                      return search==="" ? x:(x[filter].toLowerCase().replace(/\s/g, "")).includes(search.toLowerCase().replace(/\s/g, ""))
-                  }
-                  else
-                  {
-                    if (!fromDate || !toDate) return x; // If date not selected, don't filter
-                      const targetDate = new Date(x[filter]);
-                      const from = new Date(fromDate);
-                      const to = new Date(toDate);
-                      return targetDate >= from && targetDate <= to;
-                  }
-                }).map((x, index) => (
+                filteredUsers.map((x, index) => (
                   <tr key={index} className="hover:bg-blue-50 transition-colors">
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 border-r border-gray-200">
                       {x.NAME || '-'}
@@ -456,9 +524,14 @@ const [formData,setFormData]=useState(tempalete)
           </table>
         </div>
       </div>
-
+       <Pagination
+  currentPage={currentPage}
+  totalPages={Math.ceil(filteredUsers.length / itemPerPage)}
+  setCurrentPage={setCurrentPage}
+/>
       {openPopup1 && <Popup1 user={selectedUser} />}
     </div>
+    
   </div>
 );
 

@@ -18,5 +18,6 @@ route.post("/login",Login)
 route.post("/sendOTP",sendEmail)
 route.post("/CheckMail",CheckEmail)
 route.post("/ResetPass",ResetPassword)
+route.post("AddAsset",)
 
 export default route

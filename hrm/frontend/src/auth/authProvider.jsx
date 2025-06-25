@@ -26,9 +26,11 @@ const AuthProvider=({children})=>{
     const [email,setEmail]=useState();
     const [otp,setOTP]=useState();
 
+
     return <AuthContext.Provider value={{loginAction,email,setEmail,setOTP,otp}}>{children}</AuthContext.Provider>
 
 }
+
 
 const useAuth=()=>{
     
