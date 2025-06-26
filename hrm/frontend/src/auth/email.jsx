@@ -9,7 +9,7 @@ const EnterEmailPage = () => {
   const navigate=useNavigate();
 
   const checkEmail=async()=>{
-    const res = await axios.post("http://localhost:3000/CheckMail", {recipitent_email: email})
+    const res = await axios.post("https://hrms-software.onrender.com/CheckMail", {recipitent_email: email})
     .then((res)=>{
             sendOTP();
             setEmail(email);
