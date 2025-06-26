@@ -64,7 +64,7 @@ const AdminSidebar = () => {
           className="flex items-center gap-2 bg-gray-50 hover:bg-gray-200 text-gray-600 hover:text-gary-600 pl-2  py-2 rounded-xl cursor-pointer transition-all duration-200"
           onClick={() => {navigate('/');localStorage.removeItem("authToken");}}
         >
-          <span className="text-md font-medium pl-2 hover:text-black">⍈ Logout<span class='pr-3 font-bold hover:font-extrabold'>⍈</span>   Logout</span>
+          <span className="text-md font-medium pl-2 hover:text-black"><span class='pr-3 font-bold hover:font-extrabold'>⍈</span>   Logout</span>
         </div>
 </div>
 
