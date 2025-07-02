@@ -5,7 +5,6 @@ import { Route, Routes } from 'react-router-dom'
 import {Onboarding} from './pages/onboarding/onboarding.jsx'
 import { Employees } from './pages/employe/employe.jsx'
 import { Documents } from './pages/documents/documents.jsx'
-import { UpdateDocuments } from './pages/updateDoc/updateDoc.jsx'
 import { Asset } from './pages/assets-page/assets.jsx'
 
 import AdminLayout from './layout/AdminLayout';
