@@ -18,7 +18,7 @@ const Employees = () => {
   
 
   const getDetials = async () => {
-    const res = await axios.get("https://hrms-software.onrender.com/getEmployee")
+    const res = await axios.get("https://appsail-50029077582.development.catalystappsail.in/getEmployee")
     setuser(res.data)
   }
 
@@ -88,7 +88,7 @@ const [formData,setFormData]=useState(tempalete)
       }
  
   const submitHandaler=async()=>{
-        await axios.post("https://hrms-software.onrender.com/updateEmployee",formData)
+        await axios.post("https://appsail-50029077582.development.catalystappsail.in/updateEmployee",formData)
         .then((res)=>{
   
             toast.success(res.data.message,{position:'top-right',duration: 5000})
