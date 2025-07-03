@@ -43,7 +43,7 @@ const actionSubmit=async(e)=>{
     getForm();
 
     // Call every 5 minutes
-    const interval = setInterval(getForm, 1000);
+    const interval = setInterval(getForm,2*60* 1000);
 
     // Cleanup on unmount
     return () => clearInterval(interval);
