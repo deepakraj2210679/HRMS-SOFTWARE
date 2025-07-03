@@ -26,8 +26,8 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         // Employee data
-        const empRes = await axios.get("https://appsail-50029077582.development.catalystappsail.in/getEmployee");
-        const onboardRes = await axios.get("https://appsail-50029077582.development.catalystappsail.in/getUsers");
+        const empRes = await axios.get("https://hrms-software.onrender.com/getEmployee");
+        const onboardRes = await axios.get("https://hrms-software.onrender.com/getUsers");
 
         setEmployeeCount(empRes.data.length);
         setActiveEmployeeCount(empRes.data.filter(emp => emp.EMPLOYEE_ACTIVE_STATUS).length);
@@ -39,7 +39,7 @@ const Dashboard = () => {
         setRecentEmployees(sortedEmployees);
 
         // Interview data
-        const interviewRes = await axios.get("https://appsail-50029077582.development.catalystappsail.in/getform");
+        const interviewRes = await axios.get("https://hrms-software.onrender.com/getform");
         const totalInterviews = interviewRes.data.length;
         
         setInterviewStats({
