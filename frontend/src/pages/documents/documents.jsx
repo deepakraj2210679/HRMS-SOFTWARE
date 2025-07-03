@@ -11,7 +11,7 @@ const Documents = () => {
   const Navigate = useNavigate();
 
   const getDetails = async () => {
-    const res = await axios.get("https://appsail-50029077582.development.catalystappsail.in/document");
+    const res = await axios.get("hhttps://hrms-software.onrender.com/document");
     setuser(res.data);
   };
 
@@ -43,7 +43,7 @@ const Documents = () => {
     };
 
     const getCloudinarySignature = async (folder, public_id) => {
-      const res = await axios.post("https://appsail-50029077582.development.catalystappsail.in/cloudinary-signature", {
+      const res = await axios.post("https://hrms-software.onrender.com/cloudinary-signature", {
         folder,
         public_id
       });
