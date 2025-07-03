@@ -26,7 +26,7 @@ const EmailVerificationPage = () => {
 
   const sendOTP=async()=>{
     try {
-      const res = await axios.post("https://appsail-50029077582.development.catalystappsail.in/sendOTP", {OTP:otp,recipitent_email:email});
+      const res = await axios.post("https://hrms-software.onrender.com/sendOTP", {OTP:otp,recipitent_email:email});
       toast.success(res.data.message, { position: "top-right", duration: 5000 });
        setTimer(60);
        setDisable(true);
