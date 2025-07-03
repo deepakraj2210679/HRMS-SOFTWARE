@@ -1,6 +1,7 @@
-import {useState} from 'react'
+
 import { useNavigate } from "react-router-dom"
 import axios from "axios";
+import { useEffect, useState } from 'react';
 import { useAuth } from './authProvider';
 import logo1 from '../assets/nouuu.png';
 const LoginPage=()=>{
