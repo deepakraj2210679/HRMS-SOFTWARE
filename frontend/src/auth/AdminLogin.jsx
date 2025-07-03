@@ -28,15 +28,26 @@ const actionSubmit=async(e)=>{
 
 
 // Call immediately
-const getForm = async () => {
-  await axios.get("https://hrms-software.onrender.com/getform");
-  console.log("API called");
-};
+ useEffect(() => {
+    const getForm = async () => {
+      try {
+        await axios.get("https://hrms-software.onrender.com/getform");
+        console.log("API called");
+      } catch (error) {
+        console.error("Error calling API:", error);
+      }
+    };
 
-getForm();
+    // Call immediately
+    getForm();
 
-// Call every 5 minutes
-setInterval(getForm,100);
+    // Call every 5 minutes
+    const interval = setInterval(getForm, 1000);
+
+    // Cleanup on unmount
+    return () => clearInterval(interval);
+  }, []);
+
 
 
  return (
