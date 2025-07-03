@@ -17,7 +17,7 @@ const Asset=()=>{
   
 
   const getDetials = async () => {
-    const res = await axios.get("https://appsail-50029077582.development.catalystappsail.in/getAssets")
+    const res = await axios.get("https://hrms-software.onrender.com/getAssets")
     setuser(res.data)
     }
     useEffect(() => {
@@ -75,7 +75,7 @@ const Asset=()=>{
       }
  
   const submitHandaler=async(req,res)=>{          
-        await axios.post("https://appsail-50029077582.development.catalystappsail.in/UpdateAsset",formData)
+        await axios.post("https://hrms-software.onrender.com/UpdateAsset",formData)
 
         .then((res)=>{
            
@@ -96,7 +96,7 @@ const Asset=()=>{
   }
 
   try {
-    const res = await axios.post("https://appsail-50029077582.development.catalystappsail.in/udassets", {
+    const res = await axios.post("https://hrms-software.onrender.com/udassets", {
       EMPLOYEE_ID
     });
 
