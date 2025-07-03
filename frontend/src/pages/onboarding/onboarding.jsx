@@ -15,7 +15,7 @@ const Onboarding = () => {
 
 
   const getDetials = async () => {
-    const res = await axios.get("https://hrms-software.onrender.com/getUsers")
+    const res = await axios.get("https://appsail-50029077582.development.catalystappsail.in/getUsers")
     setuser(res.data)
   }
 
@@ -41,7 +41,7 @@ const Popup1 = ({user}) => {
     }
     else
     {
-        const Eid=await axios.get(`https://hrms-software.onrender.com/getuser/${formData.EMPLOYEE_ID}`);
+        const Eid=await axios.get(`https://appsail-50029077582.development.catalystappsail.in/getuser/${formData.EMPLOYEE_ID}`);
         if (Eid.data.message != "found") 
         {
           setErrorMessage(`✅ ${formData.EMPLOYEE_ID} does not exist. You can proceed.`);
@@ -91,7 +91,7 @@ const [formData,setFormData]=useState(tempalete)
 
   
   const deleteUser=async()=>{
-    await axios.delete(`https://hrms-software.onrender.com/deleteInterview/${ID}`);
+    await axios.delete(`https://appsail-50029077582.development.catalystappsail.in/deleteInterview/${ID}`);
     await axios.post()
     getDetials(); 
   }
@@ -106,7 +106,7 @@ const [formData,setFormData]=useState(tempalete)
   const submitHandaler=async()=>{
         const updatedForm = { ...formData, EMPLOYEE_ACTIVE_STATUS: 1 };
         setFormData(updatedForm);  // (optional)
-        await axios.post("https://hrms-software.onrender.com/createEmployee", updatedForm)
+        await axios.post("https://appsail-50029077582.development.catalystappsail.in/createEmployee", updatedForm)
 
         .then((res)=>{
   
