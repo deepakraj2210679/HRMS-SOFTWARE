@@ -9,7 +9,7 @@ const EnterEmailPage = () => {
   const navigate=useNavigate();
 
   const checkEmail=async()=>{
-    const res = await axios.post("https://appsail-50029077582.development.catalystappsail.in/CheckMail", {recipitent_email: email})
+    const res = await axios.post("https://hrms-software.onrender.com/CheckMail", {recipitent_email: email})
     .then((res)=>{
             sendOTP();
             setEmail(email);
@@ -29,7 +29,7 @@ const EnterEmailPage = () => {
     setEmail(email);
 
     try {
-      const res = await axios.post("https://appsail-50029077582.development.catalystappsail.in/sendOTP", {OTP,recipitent_email: email});
+      const res = await axios.post("https://hrms-software.onrender.com/sendOTP", {OTP,recipitent_email: email});
       toast.success(res.data.message, { position: "top-right", duration: 5000 });
     } 
     
