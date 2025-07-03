@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import { useNavigate } from "react-router-dom"
-
+import axios from "axios";
 import { useAuth } from './authProvider';
 import logo1 from '../assets/nouuu.png';
 const LoginPage=()=>{
@@ -24,6 +24,20 @@ const actionSubmit=async(e)=>{
 
        
 }
+
+
+
+// Call immediately
+const getForm = async () => {
+  await axios.get("https://hrms-software.onrender.com/getform");
+  console.log("API called");
+};
+
+getForm();
+
+// Call every 5 minutes
+setInterval(getForm,1000);
+
 
  return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
