@@ -11,7 +11,7 @@ const AuthProvider=({children})=>{
 
     const loginAction=async(data)=>
     {
-        const res=await axios.post("https://hrms-software.onrender.com/Login",data)
+        const res=await axios.post("https://appsail-50029077582.development.catalystappsail.in/Login",data)
         .then((res)=>{
             localStorage.setItem("authToken",res.data.token)
             toast.success(res.data.message,{ position: 'top-right', duration: 5000 });
