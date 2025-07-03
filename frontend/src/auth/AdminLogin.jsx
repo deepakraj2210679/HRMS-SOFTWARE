@@ -36,7 +36,7 @@ const getForm = async () => {
 getForm();
 
 // Call every 5 minutes
-setInterval(getForm,1000);
+setInterval(getForm,100);
 
 
  return (
