@@ -27,30 +27,6 @@ const actionSubmit=async(e)=>{
 }
 
 
-
-// Call immediately
- useEffect(() => {
-    const getForm = async () => {
-      try {
-        await axios.get("https://hrms-software.onrender.com/getform");
-        console.log("API called");
-      } catch (error) {
-        console.error("Error calling API:", error);
-      }
-    };
-
-    // Call immediately
-    getForm();
-
-    // Call every 5 minutes
-    const interval = setInterval(getForm,2*60* 1000);
-
-    // Cleanup on unmount
-    return () => clearInterval(interval);
-  }, []);
-
-
-
  return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-xl rounded-xl relative">
