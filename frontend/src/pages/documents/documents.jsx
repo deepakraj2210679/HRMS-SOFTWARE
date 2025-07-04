@@ -11,7 +11,7 @@ const Documents = () => {
   const Navigate = useNavigate();
 
   const getDetails = async () => {
-    const res = await axios.get("hhttps://hrms-software.onrender.com/document");
+    const res = await axios.get("https://hrms-software.onrender.com/document");
     setuser(res.data);
   };
 
@@ -76,7 +76,7 @@ const Documents = () => {
         console.log("Cloudinary Upload Response:", cloudRes.data);
         const uploadedUrl = cloudRes.data.secure_url;
 
-        await axios.post("https://appsail-50029077582.development.catalystappsail.in/UpdateDocStatus", {
+        await axios.post("https://hrms-software.onrender.com/UpdateDocStatus", {
           EMPLOYEE_ID: formData.EMPLOYEE_ID,
           field,
           url: uploadedUrl,
