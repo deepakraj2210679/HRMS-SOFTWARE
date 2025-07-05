@@ -1,6 +1,7 @@
-import {useState} from 'react'
-import { useNavigate } from "react-router-dom"
 
+import { useNavigate } from "react-router-dom"
+import axios from "axios";
+import { useEffect, useState } from 'react';
 import { useAuth } from './authProvider';
 import logo1 from '../assets/nouuu.png';
 const LoginPage=()=>{
@@ -26,6 +27,7 @@ const actionSubmit=async(e)=>{
 
        
 }
+
 
  return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
