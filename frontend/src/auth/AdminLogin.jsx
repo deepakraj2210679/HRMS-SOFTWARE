@@ -13,7 +13,9 @@ const LoginPage=()=>{
 
     const {loginAction}=useAuth()
 
-  alert("For a better experience, please use the application on a laptop. If you are using a mobile phone, switch to desktop mode.");
+  useEffect(() => {
+    alert("For a better experience, please use the application on a laptop. If you are using a mobile phone, switch to desktop mode.");
+  }, []); 
 
 
 const actionSubmit=async(e)=>{
