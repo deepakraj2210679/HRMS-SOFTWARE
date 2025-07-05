@@ -1,6 +1,6 @@
-import {useState} from 'react'
-import { useNavigate } from "react-router-dom"
 
+import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
 import { useAuth } from './authProvider';
 import logo1 from '../assets/nouuu.png';
 const LoginPage=()=>{
