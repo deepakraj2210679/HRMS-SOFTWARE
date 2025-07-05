@@ -28,7 +28,7 @@ const Interview = () => {
 
   const getDetials = async () => {
     alert("Note: Updates may take time to appear due to server limits after submiting Interview form.");
-    const res = await axios.get("http://localhost:3000/getform");
+    const res = await axios.get("https://hrms-software.onrender.com/getform");
     setuser(res.data);
   };
 
@@ -51,7 +51,7 @@ const Interview = () => {
 const handleConfirmSelect = async () => {
   try {
     const { conductedBy, ctc, role, doj } = selectDetails;
-    await axios.post("http://localhost:3000/UpdateInterview", {
+    await axios.post("https://hrms-software.onrender.com/UpdateInterview", {
       ...selectedUser,
       STATUS: "Selected",
       CONDUCTED_BY: conductedBy,
@@ -61,7 +61,7 @@ const handleConfirmSelect = async () => {
     getDetials();
     toast.success("Candidate Selected", { position: 'top-right' });
 
-   await axios.post("http://localhost:3000/addinter", {
+   await axios.post("https://hrms-software.onrender.com/addinter", {
         NAME: selectedUser.NAME,
         GENDER: selectedUser.GENDER,
         DATE_OF_BIRTH: selectedUser.DOB?.split("T")[0],
@@ -90,7 +90,7 @@ const handleConfirmSelect = async () => {
 
   const handleConfirmReject = async () => {
     try {
-      await axios.post("http://localhost:3000/UpdateInterviewReject", {
+      await axios.post("https://hrms-software.onrender.com/UpdateInterviewReject", {
         ...rejectingUser,
         STATUS: "Rejected",
         REJECTION_REASON: rejectionReason,

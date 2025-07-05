@@ -18,7 +18,7 @@ const Employees = () => {
   
 
   const getDetials = async () => {
-    const res = await axios.get("http://localhost:3000/getEmployee")
+    const res = await axios.get("https://hrms-software.onrender.com/getEmployee")
     setuser(res.data)
   }
 
@@ -88,7 +88,7 @@ const [formData,setFormData]=useState(tempalete)
       }
  
   const submitHandaler=async()=>{
-        await axios.post("http://localhost:3000/updateEmployee",formData)
+        await axios.post("https://hrms-software.onrender.com/updateEmployee",formData)
         .then((res)=>{
   
             toast.success(res.data.message,{position:'top-right',duration: 5000})
