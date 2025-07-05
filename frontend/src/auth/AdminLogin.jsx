@@ -74,9 +74,7 @@ const actionSubmit=async(e)=>{
         </form>
         <p className="text-sm text-center text-gray-600">
           Don't have an account?{' '}
-          <button className="text-yellow-600 font-semibold cursor-pointer" onClick={() => {
-      alert("Admin Contact:\nEmail: deepakaero2000@gmail.com\nPhone no: 6380591011");
-    }}>Contact Admin</button>
+          <span className="text-yellow-600 font-semibold cursor-pointer">Contact Admin</span>
         </p>
         
       </div>
