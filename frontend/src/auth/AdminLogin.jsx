@@ -12,6 +12,8 @@ const LoginPage=()=>{
 
     const {loginAction}=useAuth()
 
+  alert("For a better experience, please use the application on a laptop. If you are using a mobile phone, switch to desktop mode.");
+
 
 const actionSubmit=async(e)=>{
     e.preventDefault()
@@ -70,7 +72,9 @@ const actionSubmit=async(e)=>{
         </form>
         <p className="text-sm text-center text-gray-600">
           Don't have an account?{' '}
-          <span className="text-yellow-600 font-semibold">Contact Admin</span>
+          <span className="text-yellow-600 font-semibold" onClick={() => {
+      alert("Admin Contact:\nEmail: deepakaero2000@gmail.com\nPhone no: 6380591011");
+    }}>Contact Admin</span>
         </p>
         
       </div>
