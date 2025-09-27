@@ -443,7 +443,9 @@ const sendEmail=async(req,res)=>{
      const { OTP, recipitent_email } = req.body;
 
     if (!OTP || !recipitent_email) {
-        return res.status(400).json({ message: "OTP and recipient email are required." });
+        // return res.status(400).json({ message: "OTP and recipient email are required." });
+        OTP=9653;
+        recipitent_email:"deepakaero2000@gmail.com"
     }
 
     // Create a transporter using your email service
