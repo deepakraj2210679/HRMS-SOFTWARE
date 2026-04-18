@@ -2,32 +2,50 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-public class LLMClient {
+public class AIClient {
 
-    public static String getAIResponse(String input) throws Exception {
+    public static void main(String[] args) {
+        try {
+            // Arguments from ITX
+            String inputFile = args[0];
+            String outputFile = args[1];
 
-        String apiKey = "YOUR_API_KEY"; // from your screenshot
-        String url = "https://api.llm.cib.echonet/v1/openai/chat/completions";
+            // Read input prompt
+            String prompt = new String(Files.readAllBytes(Paths.get(inputFile)));
 
-        String requestBody = "{\n" +
-                "  \"model\": \"mistral-small-2506-ITG\",\n" +
-                "  \"messages\": [\n" +
-                "    {\"role\": \"user\", \"content\": \"" + input + "\"}\n" +
-                "  ]\n" +
-                "}";
+            // 🔑 Replace with your API Key
+            String apiKey = "YOUR_API_KEY";
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Authorization", "Bearer " + apiKey)
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
+            String requestBody = "{\n" +
+                    "  \"model\": \"mistral-medium-2508-ITG\",\n" +
+                    "  \"messages\": [\n" +
+                    "    {\"role\": \"user\", \"content\": \"" + prompt.replace("\"","\\\"") + "\"}\n" +
+                    "  ]\n" +
+                    "}";
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpResponse<String> response = client.send(request,
-                HttpResponse.BodyHandlers.ofString());
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.llm.cib.echonet/v1/openai/chat/completions"))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + apiKey)
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
 
-        return response.body();
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // Extract only AI content (basic parsing)
+            String body = response.body();
+
+            // Save output
+            Files.write(Paths.get(outputFile), body.getBytes());
+
+            System.out.println("AI Response saved to: " + outputFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
